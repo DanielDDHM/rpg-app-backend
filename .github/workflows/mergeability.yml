@@ -1,0 +1,36 @@
+name: Mergeability
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+    types:
+      - opened
+      - edited
+      - synchronize
+
+jobs:
+  build:
+    name: Build & Tests Check
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setuping Node
+        uses: actions/setup-node@v3
+
+      - name: Dependencies Install
+        run : npm install
+
+      - name: Lint Fix
+        run: npm run lint --fix
+
+      - name: Unit Test
+        run: npm run test

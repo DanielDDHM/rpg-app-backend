@@ -1,0 +1,113 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model campaigns {
+  id        String     @id @default(uuid()) @map("_id")
+  caracters caracter[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime?  @default(now())
+}
+
+model users {
+  id          String     @id @default(uuid()) @map("_id")
+  nick        String     @unique
+  name        String
+  email       String     @unique
+  phone       String
+  password    String
+  caracters   caracter[]
+  isActive    Boolean?   @default(true)
+  isConfirmed Boolean?   @default(false)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime?  @default(now())
+}
+
+model caracter {
+  id          String     @id @default(uuid()) @map("_id")
+  campaign    campaigns  @relation(fields: [campaignsId], references: [id])
+  owner       users      @relation(fields: [usersId], references: [id])
+  campaignsId String
+  usersId     String
+  skills      skills?
+  items       items?
+  about       about?
+  atributes   atributes?
+  status      status?
+  isAlive     Boolean?   @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime?  @default(now())
+}
+
+model about {
+  id         String    @id @default(uuid()) @map("_id")
+  race       String
+  class      String
+  history    String
+  expertises Json
+  appareance String
+  caracter   caracter? @relation(fields: [caracterId], references: [id])
+  caracterId String?   @unique
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime? @default(now())
+}
+
+model status {
+  id           String    @id @default(uuid()) @map("_id")
+  proeficiency Int
+  level        Int
+  exp          Int
+  age          Int
+  armorClass   Int
+  initiative   Int
+  desloc       Int
+  life         Int
+  height       Float
+  weight       Float
+  caracter     caracter? @relation(fields: [caracterId], references: [id])
+  caracterId   String?   @unique
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime? @default(now())
+}
+
+model atributes {
+  id          String    @id @default(uuid()) @map("_id")
+  force       Int
+  endurance   Int
+  dexterity   Int
+  charisma    Int
+  inteligence Int
+  Wisdom      Int
+  caracter    caracter  @relation(fields: [caracterId], references: [id])
+  caracterId  String    @unique
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime? @default(now())
+}
+
+model items {
+  id         String    @id @default(uuid()) @map("_id")
+  name       String
+  type       String
+  atributes  Json
+  caracter   caracter? @relation(fields: [caracterId], references: [id])
+  caracterId String?   @unique
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime? @default(now())
+}
+
+model skills {
+  id            String    @id @default(uuid()) @map("_id")
+  name          String
+  level         Int
+  ingredients   Json
+  caracteristcs Json
+  caracter      caracter? @relation(fields: [caracterId], references: [id])
+  caracterId    String?   @unique
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime? @default(now())
+}
