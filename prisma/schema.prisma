@@ -9,23 +9,25 @@ datasource db {
 
 model campaigns {
   id        String     @id @default(uuid()) @map("_id")
+  users     users?     @relation(fields: [usersId], references: [id])
+  usersId   String?
   caracters caracter[]
   createdAt DateTime   @default(now())
   updatedAt DateTime?  @default(now())
 }
 
 model users {
-  id          String     @id @default(uuid()) @map("_id")
-  nick        String     @unique
-  name        String
-  email       String     @unique
-  phone       String
-  password    String
-  caracters   caracter[]
-  isActive    Boolean?   @default(true)
-  isConfirmed Boolean?   @default(false)
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime?  @default(now())
+  id        String      @id @default(uuid()) @map("_id")
+  nick      String      @unique
+  name      String
+  email     String      @unique
+  phone     String
+  password  String
+  master    campaigns[]
+  caracters caracter[]
+  isActive  Boolean?    @default(true)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime?   @default(now())
 }
 
 model caracter {
@@ -82,7 +84,7 @@ model atributes {
   dexterity   Int
   charisma    Int
   inteligence Int
-  Wisdom      Int
+  wisdom      Int
   caracter    caracter  @relation(fields: [caracterId], references: [id])
   caracterId  String    @unique
   createdAt   DateTime  @default(now())
