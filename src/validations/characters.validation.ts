@@ -2,6 +2,10 @@ import { z } from "zod";
 
 export namespace CharacterValidation {
   export const get = z.object({
+    id: z.string()
+      .min(2, { message: 'MIN_LENGHT_3' })
+      .max(10, { message: 'MAX_LENGTH_10' })
+      .optional(),
     user: z.string()
       .min(2, { message: 'NON_EMPTY' })
       .optional(),

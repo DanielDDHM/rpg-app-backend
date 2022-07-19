@@ -1,29 +1,28 @@
-import cors from 'cors';
-import express from 'express';
-import "express-async-errors";
-import 'dotenv/config';
-const { PORT, NAME } = process.env
+import Fastify from 'fastify'
+import 'dotenv/config'
+import cors from '@fastify/cors';
+import routes from './routes';
+const { PORT } = process.env
 
-//APP
-const app = express();
+const app = Fastify()
+// for log input inside fastify {logger: true}
 
-// Express middlewares
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.register(cors, {
+  origin: '*'
+})
 
-// app use routes
-app.use('/v1')
+routes(app)
+// Declare a route
+app.get('/health', async (_request, _reply) => ({
+  status: 'UP',
+  message: 'Hello World',
+}));
 
-// one call for test
-app.get('/health', (request, response) => {
-  const user = String(NAME) || "User";
-  return response.send({
-    message: `Hello ${user}`,
-    status: 'UP'
-  });
-});
-
-app.listen(PORT, () => {
+// Run the server!
+app.listen({ port: Number(PORT) || 3000 }, function (err, address) {
   console.log(`APP STARTED ON http://localhost:${PORT || 3000}`);
-});
+  if (err) {
+    app.log.error(err)
+    process.exit(1)
+  }
+})

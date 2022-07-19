@@ -10,12 +10,6 @@ export namespace CharacterType {
   export type destroy = z.infer<typeof GenericValidation.id>
 }
 
-export namespace AboutType { }
-
-export namespace AtributeType { }
-
 export namespace itemsType { }
 
 export namespace skillsType { }
-
-export namespace statusType { }

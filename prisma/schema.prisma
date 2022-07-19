@@ -36,11 +36,12 @@ model character {
   owner       users     @relation(fields: [usersId], references: [id])
   campaignsId String
   usersId     String
-  skills      Json[]
-  items       Json[]
-  about       Json[]
-  atributes   Json[]
-  status      Json[]
+  about       String?
+  slots       Json?
+  atributes   Json?
+  status      Json?
+  magics      Json[]    @default([])
+  items       Json[]    @default([])
   isAlive     Boolean?  @default(true)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime? @default(now())
