@@ -12,4 +12,5 @@ export namespace UserTypes {
 export namespace CampaignTypes {
   export type create = z.infer<typeof CampaignValidation.create>
   export type update = z.infer<typeof CampaignValidation.update>
+  export type destroy = z.infer<typeof GenericValidation.id>
 }
