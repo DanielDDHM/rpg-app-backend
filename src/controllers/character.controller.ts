@@ -2,7 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify"
 
 export namespace CharacterController {
   export const get = async (req: FastifyRequest, res: FastifyReply) => {
-    console.log('Teste')
+
   }
   export const create = async (req: FastifyRequest, res: FastifyReply) => {
 
