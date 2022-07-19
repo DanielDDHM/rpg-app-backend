@@ -8,29 +8,29 @@ datasource db {
 }
 
 model campaigns {
-  id        String     @id @default(uuid()) @map("_id")
-  users     users?     @relation(fields: [usersId], references: [id])
-  usersId   String?
-  caracters caracter[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime?  @default(now())
+  id         String      @id @default(uuid()) @map("_id")
+  users      users?      @relation(fields: [usersId], references: [id])
+  usersId    String?
+  characters character[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime?   @default(now())
 }
 
 model users {
-  id        String      @id @default(uuid()) @map("_id")
-  nick      String      @unique
-  name      String
-  email     String      @unique
-  phone     String
-  password  String
-  master    campaigns[]
-  caracters caracter[]
-  isActive  Boolean?    @default(true)
-  createdAt DateTime    @default(now())
-  updatedAt DateTime?   @default(now())
+  id         String      @id @default(uuid()) @map("_id")
+  nick       String      @unique
+  name       String
+  email      String      @unique
+  phone      String
+  password   String
+  master     campaigns[]
+  characters character[]
+  isActive   Boolean?    @default(true)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime?   @default(now())
 }
 
-model caracter {
+model character {
   id          String     @id @default(uuid()) @map("_id")
   campaign    campaigns  @relation(fields: [campaignsId], references: [id])
   owner       users      @relation(fields: [usersId], references: [id])
@@ -47,20 +47,20 @@ model caracter {
 }
 
 model about {
-  id         String    @id @default(uuid()) @map("_id")
-  race       String
-  class      String
-  history    String
-  expertises Json
-  appareance String
-  caracter   caracter? @relation(fields: [caracterId], references: [id])
-  caracterId String?   @unique
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime? @default(now())
+  id          String     @id @default(uuid()) @map("_id")
+  race        String
+  class       String
+  history     String
+  expertises  Json
+  appareance  String
+  character   character? @relation(fields: [characterId], references: [id])
+  characterId String?    @unique
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime?  @default(now())
 }
 
 model status {
-  id           String    @id @default(uuid()) @map("_id")
+  id           String     @id @default(uuid()) @map("_id")
   proeficiency Int
   level        Int
   exp          Int
@@ -71,10 +71,10 @@ model status {
   life         Int
   height       Float
   weight       Float
-  caracter     caracter? @relation(fields: [caracterId], references: [id])
-  caracterId   String?   @unique
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime? @default(now())
+  character    character? @relation(fields: [characterId], references: [id])
+  characterId  String?    @unique
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime?  @default(now())
 }
 
 model atributes {
@@ -85,31 +85,31 @@ model atributes {
   charisma    Int
   inteligence Int
   wisdom      Int
-  caracter    caracter  @relation(fields: [caracterId], references: [id])
-  caracterId  String    @unique
+  character   character @relation(fields: [characterId], references: [id])
+  characterId String    @unique
   createdAt   DateTime  @default(now())
   updatedAt   DateTime? @default(now())
 }
 
 model items {
-  id         String    @id @default(uuid()) @map("_id")
-  name       String
-  type       String
-  atributes  Json
-  caracter   caracter? @relation(fields: [caracterId], references: [id])
-  caracterId String?   @unique
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime? @default(now())
+  id          String     @id @default(uuid()) @map("_id")
+  name        String
+  type        String
+  atributes   Json
+  character   character? @relation(fields: [characterId], references: [id])
+  characterId String?    @unique
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime?  @default(now())
 }
 
 model skills {
-  id            String    @id @default(uuid()) @map("_id")
-  name          String
-  level         Int
-  ingredients   Json
-  caracteristcs Json
-  caracter      caracter? @relation(fields: [caracterId], references: [id])
-  caracterId    String?   @unique
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime? @default(now())
+  id             String     @id @default(uuid()) @map("_id")
+  name           String
+  level          Int
+  ingredients    Json
+  characteristcs Json
+  character      character? @relation(fields: [characterId], references: [id])
+  characterId    String?    @unique
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime?  @default(now())
 }

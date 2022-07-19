@@ -1,12 +1,12 @@
 import { z } from "zod";
 
 export namespace GenericValidation {
-  export const idValidation = z.object({
+  export const id = z.object({
     id: z.string()
       .min(2, { message: 'MIN_LENGHT_3' }),
   }).strict();
 
-  export const getValidation = z.object({
+  export const get = z.object({
     id: z.string()
       .min(2, { message: 'MIN_LENGHT_3' }),
     page: z.number()

@@ -1,13 +1,13 @@
 import { z } from "zod";
 
 export namespace UsersValidation {
-  export const userGetValidation = z.object({
+  export const get = z.object({
     email: z.string()
       .min(2, { message: 'NON_EMPTY' })
       .optional(),
   }).strict();
 
-  export const userCreateValidation = z.object({
+  export const create = z.object({
     name: z.string()
       .min(2, { message: 'MIN_LENGHT_3' })
       .max(10, { message: 'MAX_LENGTH_10' }),
@@ -21,7 +21,7 @@ export namespace UsersValidation {
       .max(13, { message: 'MAX_LENGTH_13' }),
   }).strict();
 
-  export const userUpdateValidation = z.object({
+  export const update = z.object({
     name: z.string()
       .min(2, { message: 'MIN_LENGHT_3' })
       .max(10, { message: 'MAX_LENGTH_10' }),
@@ -35,7 +35,7 @@ export namespace UsersValidation {
       .max(13, { message: 'MAX_LENGTH_13' }),
   }).strict();
 
-  export const userDeleteValidation = z.object({
+  export const destroy = z.object({
     id: z.string()
       .min(2, { message: 'MIN_LENGHT_3' }),
     email: z.string()
