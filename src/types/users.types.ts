@@ -1,5 +1,9 @@
 import * as z from 'zod';
-import { CampaignValidation, GenericValidation, UsersValidation } from '../validations';
+import {
+  CampaignValidation,
+  GenericValidation,
+  UsersValidation
+} from '../validations';
 
 export namespace UserTypes {
   export type get = z.infer<typeof UsersValidation.get>;

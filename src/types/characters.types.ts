@@ -1,5 +1,8 @@
 import { z } from "zod";
-import { CharacterValidation, GenericValidation } from "../validations";
+import {
+  CharacterValidation,
+  GenericValidation
+} from "../validations";
 
 export namespace CharacterType {
   export type create = z.infer<typeof CharacterValidation.create>

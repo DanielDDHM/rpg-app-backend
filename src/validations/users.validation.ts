@@ -8,6 +8,9 @@ export namespace UsersValidation {
   }).strict();
 
   export const create = z.object({
+    nick: z.string()
+      .min(2, { message: 'MIN_LENGHT_3' })
+      .max(10, { message: 'MAX_LENGTH_10' }),
     name: z.string()
       .min(2, { message: 'MIN_LENGHT_3' })
       .max(10, { message: 'MAX_LENGTH_10' }),
@@ -22,6 +25,8 @@ export namespace UsersValidation {
   }).strict();
 
   export const update = z.object({
+    id: z.string()
+      .min(2, { message: 'MIN_LENGHT_3' }),
     name: z.string()
       .min(2, { message: 'MIN_LENGHT_3' })
       .max(10, { message: 'MAX_LENGTH_10' }),
@@ -47,4 +52,21 @@ export namespace UsersValidation {
       .optional(),
   }).strict();
 
+}
+
+export namespace CampaignValidation {
+  export const create = z.object({
+    name: z.string()
+      .min(2, { message: 'MIN_LENGHT_3' })
+      .max(10, { message: 'MAX_LENGTH_10' }),
+    user: z.string()
+      .min(2, { message: 'MIN_LENGHT_3' })
+      .max(10, { message: 'MAX_LENGTH_10' }),
+  }).strict();
+
+  export const update = z.object({
+    name: z.string()
+      .min(2, { message: 'MIN_LENGHT_3' })
+      .max(10, { message: 'MAX_LENGTH_10' }),
+  }).strict();
 }
