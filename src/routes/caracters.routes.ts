@@ -21,11 +21,12 @@ const caractersRouter = (
     .post('/:id/additem', ItemsController.add)
     .post('/:id/addskills', SkillsController.add)
     .put('/update/:id', CharacterController.update)
-    .put('/killOrRevive/:id', CharacterController.killOrRevive)
     .put('/:id/edititem/id', ItemsController.edit)
     .put('/:id/editskill/id', ItemsController.edit)
     .put('/:id/removeitem/id', ItemsController.remove)
     .put('/:id/removeskill/id', SkillsController.remove)
+    .patch('/killOrRevive/:id', CharacterController.killOrRevive)
+
     .delete('/delete/:id', CharacterController.destroy)
 
   done();

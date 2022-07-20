@@ -9,6 +9,7 @@ datasource db {
 
 model campaigns {
   id         String      @id @default(uuid()) @map("_id")
+  name       String
   users      users?      @relation(fields: [usersId], references: [id])
   usersId    String?
   characters character[]

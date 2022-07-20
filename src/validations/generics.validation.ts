@@ -8,7 +8,8 @@ export namespace GenericValidation {
 
   export const get = z.object({
     id: z.string()
-      .min(2, { message: 'MIN_LENGHT_3' }),
+      .min(2, { message: 'MIN_LENGHT_3' })
+      .optional(),
     page: z.number()
       .nonnegative()
       .optional(),

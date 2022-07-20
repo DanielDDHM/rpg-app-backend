@@ -16,7 +16,7 @@ const userRouter = (
     .get('/get/:id?', UserController.get)
     .post('/create', UserController.create)
     .put('/update/:id', UserController.update)
-    .put('/active/:id', UserController.activate)
+    .patch('/active/:id', UserController.activate)
     .delete('/delete/:id', UserController.destroy)
 
   done();
