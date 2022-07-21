@@ -2,7 +2,7 @@ import {
   FastifyInstance,
   FastifyRegisterOptions
 } from 'fastify';
-import { AuthController } from '../controllers/auth.controller';
+import { AuthController } from '../controllers';
 
 const authRouter = (
   fastify: FastifyInstance,

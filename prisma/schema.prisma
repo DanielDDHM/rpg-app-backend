@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl"]
 }
 
 datasource db {
@@ -8,7 +9,7 @@ datasource db {
 }
 
 model campaigns {
-  id         String      @id @default(uuid()) @map("_id")
+  id         String      @id @default(uuid())
   name       String
   users      users?      @relation(fields: [usersId], references: [id])
   usersId    String?
@@ -18,7 +19,7 @@ model campaigns {
 }
 
 model users {
-  id         String      @id @default(uuid()) @map("_id")
+  id         String      @id @default(uuid())
   nick       String      @unique
   name       String
   email      String      @unique
@@ -32,12 +33,13 @@ model users {
 }
 
 model character {
-  id          String    @id @default(uuid()) @map("_id")
+  id          String    @id @default(uuid())
+  name        String
   campaign    campaigns @relation(fields: [campaignsId], references: [id])
   owner       users     @relation(fields: [usersId], references: [id])
   campaignsId String
   usersId     String
-  about       String?
+  about       Json?
   slots       Json?
   atributes   Json?
   status      Json?

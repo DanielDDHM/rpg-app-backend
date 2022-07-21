@@ -20,7 +20,7 @@ import { Exception } from "../helpers"
 
 export namespace UserService {
   export const get = async (
-    params: UserTypes.get): Promise<{ user: users[], total: Number }> => {
+    params: UserTypes.get): Promise<{ user: users[], total: number }> => {
     try {
       const { id, email, page, perPage } = UsersValidation.get.parse(params)
 
@@ -128,12 +128,10 @@ export namespace UserService {
     }
   }
   export const destroy = async (
-    params: UserTypes.destroy): Promise<{ message: String }> => {
+    params: UserTypes.destroy): Promise<{ message: string }> => {
     try {
-      console.log(params)
       const { id, email, password } = UsersValidation.destroy.parse(params)
 
-      console.log(id)
       await prisma.users.delete({
         where: { id }
       })
@@ -149,7 +147,7 @@ export namespace UserService {
 
 export namespace CampaignService {
   export const get = async (
-    params: CampaignTypes.get): Promise<{ campaign: campaigns[], total: Number }> => {
+    params: CampaignTypes.get): Promise<{ campaign: campaigns[], total: number }> => {
     try {
       const { id, user, page, perPage } = CampaignValidation.get.parse(params)
 
@@ -180,7 +178,6 @@ export namespace CampaignService {
   export const create = async (
     params: CampaignTypes.create): Promise<campaigns> => {
     try {
-
       const { name, user } = CampaignValidation.create.parse(params)
 
       const campaign = await prisma.campaigns.create({
@@ -220,7 +217,7 @@ export namespace CampaignService {
     }
   }
   export const destroy = async (
-    params: CampaignTypes.destroy): Promise<{ message: String }> => {
+    params: CampaignTypes.destroy): Promise<{ message: string }> => {
     try {
       const { id } = GenericValidation.id.parse(params)
 

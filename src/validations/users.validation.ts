@@ -89,7 +89,6 @@ export namespace CampaignValidation {
       .max(10, { message: 'MAX_LENGTH_10' }),
     user: z.string()
       .min(2, { message: 'MIN_LENGHT_3' })
-      .max(10, { message: 'MAX_LENGTH_10' }),
   }).strict();
 
   export const update = z.object({

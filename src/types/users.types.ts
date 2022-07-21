@@ -22,10 +22,10 @@ export namespace CampaignTypes {
 }
 
 export namespace UserReqType {
-  export type updateT = Omit<UserTypes.update, 'id'>;
-  export type destroyT = Omit<UserTypes.destroy, 'id'>;
+  export type update = Omit<UserTypes.update, 'id'>;
+  export type destroy = Omit<UserTypes.destroy, 'id'>;
 }
 
 export namespace CampaignReqType {
-  export type updateT = Omit<CampaignTypes.update, 'id'>
+  export type update = Omit<CampaignTypes.update, 'id'>
 }

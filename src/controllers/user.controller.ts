@@ -1,3 +1,5 @@
+import { StatusCode } from "../constants";
+import { PresenterFactory } from "../factories";
 import {
   campaigns,
   users
@@ -6,8 +8,6 @@ import {
   FastifyReply,
   FastifyRequest
 } from "fastify";
-import { StatusCode } from "../constants";
-import { PresenterFactory } from "../factories";
 import {
   CampaignService,
   UserService
@@ -29,7 +29,7 @@ export namespace UserController {
     const user = await UserService.get(req.query as UserTypes.get)
 
     return res.status(StatusCode.OK).send(
-      new PresenterFactory<{ user: users[], total: Number }>(
+      new PresenterFactory<{ user: users[], total: number }>(
         user,
         ['SUCCESS'],
       )
@@ -48,7 +48,7 @@ export namespace UserController {
     )
   }
   export const update = async (
-    req: FastifyRequest<{ Params: GenericTypes.id, Body: UserReqType.updateT }>,
+    req: FastifyRequest<{ Params: GenericTypes.id, Body: UserReqType.update }>,
     res: FastifyReply) => {
     const { params: { id }, body } = req
     const userUpdated = await UserService.update({ id, ...body } as UserTypes.update)
@@ -74,13 +74,13 @@ export namespace UserController {
     )
   }
   export const destroy = async (
-    req: FastifyRequest<{ Params: GenericTypes.id, Querystring: UserReqType.destroyT }>,
+    req: FastifyRequest<{ Params: GenericTypes.id, Querystring: UserReqType.destroy }>,
     res: FastifyReply) => {
     const { params: { id }, query } = req
     const userDeleted = await UserService.destroy({ id, ...query } as UserTypes.destroy)
 
     return res.status(StatusCode.OK).send(
-      new PresenterFactory<{ message: String }>(
+      new PresenterFactory<{ message: string }>(
         userDeleted,
       )
     )
@@ -94,7 +94,7 @@ export namespace CampaignController {
     const campaign = await CampaignService.get(req.query as GenericTypes.get)
 
     return res.status(StatusCode.OK).send(
-      new PresenterFactory<{ campaign: campaigns[], total: Number }>(
+      new PresenterFactory<{ campaign: campaigns[], total: number }>(
         campaign,
         ['SUCCESS'],
       )
@@ -114,7 +114,7 @@ export namespace CampaignController {
     )
   }
   export const update = async (
-    req: FastifyRequest<{ Params: GenericTypes.id, Body: CampaignReqType.updateT }>,
+    req: FastifyRequest<{ Params: GenericTypes.id, Body: CampaignReqType.update }>,
     res: FastifyReply) => {
     const { params: { id }, body } = req
     const campaign = await CampaignService.update({ id, ...body } as CampaignTypes.update)
@@ -132,7 +132,7 @@ export namespace CampaignController {
     const campaign = await CampaignService.destroy(req.params as CampaignTypes.destroy)
 
     return res.status(StatusCode.OK).send(
-      new PresenterFactory<{ message: String }>(
+      new PresenterFactory<{ message: string }>(
         campaign,
       )
     )

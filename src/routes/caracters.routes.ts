@@ -15,19 +15,22 @@ const caractersRouter = (
 ) => {
   fastify
     .get('/get/:id?', CharacterController.get)
-    .get('/:id/items', ItemsController.get)
-    .get('/:id/skills', SkillsController.get)
     .post('/create', CharacterController.create)
-    .post('/:id/additem', ItemsController.add)
-    .post('/:id/addskills', SkillsController.add)
     .put('/update/:id', CharacterController.update)
-    .put('/:id/edititem/id', ItemsController.edit)
-    .put('/:id/editskill/id', ItemsController.edit)
-    .put('/:id/removeitem/id', ItemsController.remove)
-    .put('/:id/removeskill/id', SkillsController.remove)
-    .patch('/killOrRevive/:id', CharacterController.killOrRevive)
-
+    .patch('/killorrevive/:id', CharacterController.killOrRevive)
     .delete('/delete/:id', CharacterController.destroy)
+
+  fastify
+    .get('/:id/items', ItemsController.get)
+    .post('/:id/additem', ItemsController.add)
+    .put('/:id/edititem/id', ItemsController.edit)
+    .delete('/:id/removeitem/id', ItemsController.remove)
+
+  fastify
+    .get('/:id/skills', SkillsController.get)
+    .post('/:id/addskills', SkillsController.add)
+    .put('/:id/editskill/id', SkillsController.edit)
+    .delete('/:id/removeskill/id', SkillsController.remove)
 
   done();
 };
