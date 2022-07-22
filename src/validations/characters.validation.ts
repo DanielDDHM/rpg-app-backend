@@ -24,6 +24,7 @@ export namespace CharacterValidation {
       .min(2, { message: 'MIN_LENGHT_3' }),
     owner: z.string()
       .min(2, { message: 'MIN_LENGHT_3' }),
+
     about: z.object({
       class: z.string()
         .min(2, { message: 'NON_EMPTY' }),
@@ -39,10 +40,14 @@ export namespace CharacterValidation {
         .nonnegative({ message: 'NON_NEGATIVE' }),
       distance: z.number()
         .nonnegative({ message: 'NON_NEGATIVE' }),
-    })
-      .optional(),
+      appareance: z.string()
+        .min(2, { message: 'NON_EMPTY' }),
+      others: z.object({}).optional(),
+    }).optional(),
+
     slots: z.object({})
       .optional(),
+
     atributes: z.object({
       force: z.number()
         .nonnegative({ message: 'NON_NEGATIVE' }),
@@ -56,8 +61,8 @@ export namespace CharacterValidation {
         .nonnegative({ message: 'NON_NEGATIVE' }),
       charisma: z.number()
         .nonnegative({ message: 'NON_NEGATIVE' }),
-    })
-      .optional(),
+    }).optional(),
+
     status: z.object({
       armor: z.number()
         .nonnegative({ message: 'NON_NEGATIVE' }),
@@ -65,23 +70,19 @@ export namespace CharacterValidation {
         .nonnegative({ message: 'NON_NEGATIVE' }),
       life: z.number()
         .nonnegative({ message: 'NON_NEGATIVE' }),
-    })
-      .optional(),
+    }).optional(),
   }).strict();
 
   export const update = z.object({
     id: z.string()
-      .min(2, { message: 'MIN_LENGHT_3' })
-      .optional(),
+      .min(2, { message: 'NON_EMPTY' }),
     name: z.string()
-      .min(2, { message: 'MIN_LENGHT_3' })
-      .max(10, { message: 'MAX_LENGTH_10' }),
+      .min(2, { message: 'NON_EMPTY' }),
     campaign: z.string()
-      .min(2, { message: 'MIN_LENGHT_3' })
-      .max(10, { message: 'MAX_LENGTH_10' }),
+      .min(2, { message: 'NON_EMPTY' }),
     owner: z.string()
-      .min(2, { message: 'MIN_LENGHT_3' })
-      .max(10, { message: 'MAX_LENGTH_10' }),
+      .min(2, { message: 'NON_EMPTY' }),
+
     about: z.object({
       class: z.string()
         .min(2, { message: 'NON_EMPTY' }),
@@ -97,10 +98,13 @@ export namespace CharacterValidation {
         .nonnegative({ message: 'NON_NEGATIVE' }),
       distance: z.number()
         .nonnegative({ message: 'NON_NEGATIVE' }),
-    })
-      .optional(),
-    slots: z.object({})
-      .optional(),
+      appareance: z.string()
+        .min(2, { message: 'NON_EMPTY' }),
+      others: z.object({}).optional(),
+    }).optional(),
+
+    slots: z.object({}).optional(),
+
     atributes: z.object({
       force: z.number()
         .nonnegative({ message: 'NON_NEGATIVE' }),
@@ -114,8 +118,8 @@ export namespace CharacterValidation {
         .nonnegative({ message: 'NON_NEGATIVE' }),
       charisma: z.number()
         .nonnegative({ message: 'NON_NEGATIVE' }),
-    })
-      .optional(),
+    }).optional(),
+
     status: z.object({
       armor: z.number()
         .nonnegative({ message: 'NON_NEGATIVE' }),
@@ -123,8 +127,7 @@ export namespace CharacterValidation {
         .nonnegative({ message: 'NON_NEGATIVE' }),
       life: z.number()
         .nonnegative({ message: 'NON_NEGATIVE' }),
-    })
-      .optional(),
+    }).optional(),
   }).strict();
 }
 
@@ -144,6 +147,14 @@ export namespace itemsvalidation {
   export const add = z.object({
 
   }).strict();
+
+  export const edit = z.object({
+
+  }).strict();
+
+  export const remove = z.object({
+
+  }).strict();
 }
 
 export namespace skillsvalidation {
@@ -160,6 +171,14 @@ export namespace skillsvalidation {
   }).strict();
 
   export const add = z.object({
+
+  }).strict();
+
+  export const edit = z.object({
+
+  }).strict();
+
+  export const remove = z.object({
 
   }).strict();
 }

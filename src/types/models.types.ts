@@ -9,6 +9,8 @@ export namespace ModelType {
       story: string,
       initiative: number,
       distance: number,
+      appareance: string,
+      others: JSON
     }
 
     export type slots = {

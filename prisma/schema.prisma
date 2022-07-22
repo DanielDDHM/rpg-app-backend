@@ -9,36 +9,36 @@ datasource db {
 }
 
 model Campaigns {
-  id         String      @id @default(uuid())
-  name       String
-  users      Users?      @relation(fields: [usersId], references: [id])
-  usersId    String
-  characters Character[]
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime?   @default(now())
+  id        String      @id @unique @default(uuid())
+  name      String
+  master    Users       @relation(fields: [usersId], references: [id])
+  usersId   String
+  Character Character[]
+  createdAt DateTime    @default(now())
+  updatedAt DateTime?   @default(now())
 }
 
 model Users {
-  id         String      @id @default(uuid())
-  nick       String      @unique
-  name       String
-  email      String      @unique
-  phone      String
-  password   String
-  master     Campaigns[]
-  characters Character[]
-  isActive   Boolean?    @default(true)
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime?   @default(now())
+  id        String      @id @unique @default(uuid())
+  nick      String      @unique
+  name      String
+  email     String      @unique
+  phone     String
+  password  String
+  Character Character[]
+  Campaigns Campaigns[]
+  isActive  Boolean?    @default(true)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime?   @default(now())
 }
 
 model Character {
-  id          String    @id @default(uuid())
+  id          String    @id @unique @default(uuid())
   name        String
-  campaign    Campaigns @relation(fields: [campaignsId], references: [id])
   owner       Users     @relation(fields: [usersId], references: [id])
-  campaignsId String
   usersId     String
+  campaign    Campaigns @relation(fields: [campaignsId], references: [id])
+  campaignsId String
   about       Json?
   slots       Json?
   atributes   Json?
