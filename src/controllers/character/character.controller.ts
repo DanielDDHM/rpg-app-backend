@@ -1,7 +1,7 @@
 import { Character } from "@prisma/client"
-import { StatusCode } from "../constants"
-import { PresenterFactory } from "../factories"
-import { CharacterService } from "../services"
+import { StatusCode } from "../../constants"
+import { PresenterFactory } from "../../factories"
+import { CharacterService } from "../../services"
 import {
   FastifyReply,
   FastifyRequest
@@ -10,7 +10,7 @@ import {
   CharacterType,
   CharacterReqType,
   GenericTypes
-} from "../types"
+} from "../../types"
 
 export namespace CharacterController {
   export const get = async (
@@ -40,7 +40,8 @@ export namespace CharacterController {
   export const update = async (
     req: FastifyRequest<{ Params: GenericTypes.id, Body: CharacterReqType.update }>,
     res: FastifyReply) => {
-    const char = await CharacterService.update(req.params as CharacterType.update)
+    const { params: { id }, body } = req
+    const char = await CharacterService.update({ id, ...body } as CharacterType.update)
 
     return res.status(StatusCode.OK).send(
       new PresenterFactory<Character>(
@@ -74,39 +75,3 @@ export namespace CharacterController {
     )
   }
 }
-
-// export namespace SkillsController {
-//   export const get = async (
-//     req: FastifyRequest,
-//     res: FastifyReply) => { }
-
-//   export const add = async (
-//     req: FastifyRequest,
-//     res: FastifyReply) => { }
-
-//   export const edit = async (
-//     req: FastifyRequest,
-//     res: FastifyReply) => { }
-
-//   export const remove = async (
-//     req: FastifyRequest,
-//     res: FastifyReply) => { }
-// }
-
-// export namespace ItemsController {
-//   export const get = async (
-//     req: FastifyRequest,
-//     res: FastifyReply) => { }
-
-//   export const add = async (
-//     req: FastifyRequest,
-//     res: FastifyReply) => { }
-
-//   export const edit = async (
-//     req: FastifyRequest,
-//     res: FastifyReply) => { }
-
-//   export const remove = async (
-//     req: FastifyRequest,
-//     res: FastifyReply) => { }
-// }

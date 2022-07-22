@@ -1,25 +1,16 @@
-import { StatusCode } from "../constants";
-import { PresenterFactory } from "../factories";
-import {
-  Campaigns,
-  Users
-} from "@prisma/client";
+import { StatusCode } from "../../constants";
+import { PresenterFactory } from "../../factories";
+import { Users } from "@prisma/client";
+import { UserService } from "../../services";
 import {
   FastifyReply,
   FastifyRequest
 } from "fastify";
 import {
-  CampaignService,
-  UserService
-} from "../services";
-import {
-  CampaignReqType,
-  CampaignTypes,
   GenericTypes,
   UserReqType,
   UserTypes
-} from "../types";
-
+} from "../../types";
 
 export namespace UserController {
   export const get = async (
@@ -82,58 +73,6 @@ export namespace UserController {
     return res.status(StatusCode.OK).send(
       new PresenterFactory<{ message: string }>(
         userDeleted,
-      )
-    )
-  }
-}
-
-export namespace CampaignController {
-  export const get = async (
-    req: FastifyRequest<{ Querystring: GenericTypes.get }>,
-    res: FastifyReply) => {
-    const campaign = await CampaignService.get(req.query as GenericTypes.get)
-
-    return res.status(StatusCode.OK).send(
-      new PresenterFactory<{ campaign: Campaigns[], total: number }>(
-        campaign,
-        ['SUCCESS'],
-      )
-    )
-  }
-
-  export const create = async (
-    req: FastifyRequest<{ Body: CampaignTypes.create }>,
-    res: FastifyReply) => {
-    const campaign = await CampaignService.create(req.body as CampaignTypes.create)
-
-    return res.status(StatusCode.OK).send(
-      new PresenterFactory<Campaigns>(
-        campaign,
-        ['SUCCESS'],
-      )
-    )
-  }
-  export const update = async (
-    req: FastifyRequest<{ Params: GenericTypes.id, Body: CampaignReqType.update }>,
-    res: FastifyReply) => {
-    const { params: { id }, body } = req
-    const campaign = await CampaignService.update({ id, ...body } as CampaignTypes.update)
-
-    return res.status(StatusCode.OK).send(
-      new PresenterFactory<Campaigns>(
-        campaign,
-        ['SUCCESS'],
-      )
-    )
-  }
-  export const destroy = async (
-    req: FastifyRequest<{ Params: CampaignTypes.destroy }>,
-    res: FastifyReply) => {
-    const campaign = await CampaignService.destroy(req.params as CampaignTypes.destroy)
-
-    return res.status(StatusCode.OK).send(
-      new PresenterFactory<{ message: string }>(
-        campaign,
       )
     )
   }

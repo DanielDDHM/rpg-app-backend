@@ -1,3 +1,2 @@
-export * from './generics.validation'
-export * from './users.validation'
-export * from './characters.validation'
+export * from './general'
+export * from './character'

@@ -2,8 +2,8 @@ import {
   FastifyReply,
   FastifyRequest
 } from "fastify"
-import { StatusCode } from "../constants"
-import { PresenterFactory } from "../factories"
+import { StatusCode } from "../../constants"
+import { PresenterFactory } from "../../factories"
 
 export namespace AuthController {
   export const login = async (

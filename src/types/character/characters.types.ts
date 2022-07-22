@@ -1,8 +1,8 @@
 import { z } from "zod";
 import {
   CharacterValidation,
-  GenericValidation
-} from "../validations";
+  GenericValidation,
+} from "../../validations";
 
 export namespace CharacterType {
   export type get = z.infer<typeof CharacterValidation.get>
@@ -15,10 +15,3 @@ export namespace CharacterReqType {
   export type get = Omit<CharacterType.get, 'id'>
   export type update = Omit<CharacterType.update, 'id'>
 }
-
-export namespace ItemsType { }
-export namespace ItemsReqType { }
-
-
-export namespace SkillsType { }
-export namespace SkillsReqType { }

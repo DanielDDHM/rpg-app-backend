@@ -1,4 +1,2 @@
-export * from './users.types'
-export * from './generic.types'
-export * from './characters.types'
-export * from './models.types'
+export * from './general'
+export * from './character'
