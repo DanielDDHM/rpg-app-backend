@@ -4,7 +4,6 @@ import {
   GenericValidation,
   UsersValidation
 } from '../validations';
-import { GenericTypes } from './generic.types';
 
 export namespace UserTypes {
   export type get = z.infer<typeof UsersValidation.get>;

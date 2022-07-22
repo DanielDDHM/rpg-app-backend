@@ -1,4 +1,4 @@
-import { character } from "@prisma/client"
+import { Character } from "@prisma/client"
 import { Exception } from "../helpers"
 import { prisma } from "../config"
 import {
@@ -16,7 +16,7 @@ import {
 
 export namespace CharacterService {
   export const get = async (
-    params: CharacterType.get): Promise<{ characters: character[], total: number }> => {
+    params: CharacterType.get): Promise<{ characters: Character[], total: number }> => {
     try {
       const { id, user, page, perPage } = CharacterValidation.get.parse(params)
 
@@ -45,7 +45,7 @@ export namespace CharacterService {
     }
   }
   export const create = async (
-    params: CharacterType.create): Promise<character> => {
+    params: CharacterType.create): Promise<Character> => {
     try {
       const {
         campaign,
@@ -78,7 +78,7 @@ export namespace CharacterService {
     }
   }
   export const update = async (
-    params: CharacterType.update): Promise<character> => {
+    params: CharacterType.update): Promise<Character> => {
     try {
       const {
         id,

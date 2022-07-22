@@ -8,35 +8,35 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model campaigns {
+model Campaigns {
   id         String      @id @default(uuid())
   name       String
-  users      users?      @relation(fields: [usersId], references: [id])
-  usersId    String?
-  characters character[]
+  users      Users?      @relation(fields: [usersId], references: [id])
+  usersId    String
+  characters Character[]
   createdAt  DateTime    @default(now())
   updatedAt  DateTime?   @default(now())
 }
 
-model users {
+model Users {
   id         String      @id @default(uuid())
   nick       String      @unique
   name       String
   email      String      @unique
   phone      String
   password   String
-  master     campaigns[]
-  characters character[]
+  master     Campaigns[]
+  characters Character[]
   isActive   Boolean?    @default(true)
   createdAt  DateTime    @default(now())
   updatedAt  DateTime?   @default(now())
 }
 
-model character {
+model Character {
   id          String    @id @default(uuid())
   name        String
-  campaign    campaigns @relation(fields: [campaignsId], references: [id])
-  owner       users     @relation(fields: [usersId], references: [id])
+  campaign    Campaigns @relation(fields: [campaignsId], references: [id])
+  owner       Users     @relation(fields: [usersId], references: [id])
   campaignsId String
   usersId     String
   about       Json?

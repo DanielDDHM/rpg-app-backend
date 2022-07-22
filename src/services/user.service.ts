@@ -1,6 +1,6 @@
 import {
-  campaigns,
-  users
+  Campaigns,
+  Users
 } from "@prisma/client"
 import {
   Messages,
@@ -20,7 +20,7 @@ import { Exception } from "../helpers"
 
 export namespace UserService {
   export const get = async (
-    params: UserTypes.get): Promise<{ user: users[], total: number }> => {
+    params: UserTypes.get): Promise<{ user: Users[], total: number }> => {
     try {
       const { id, email, page, perPage } = UsersValidation.get.parse(params)
 
@@ -50,7 +50,7 @@ export namespace UserService {
     }
   }
   export const create = async (
-    params: UserTypes.create): Promise<users> => {
+    params: UserTypes.create): Promise<Users> => {
     try {
       const { nick, name, email, phone, password, } = UsersValidation.create.parse(params)
 
@@ -72,7 +72,7 @@ export namespace UserService {
     }
   }
   export const update = async (
-    params: UserTypes.update): Promise<users> => {
+    params: UserTypes.update): Promise<Users> => {
     try {
       const { id, name, email, phone, password, } = UsersValidation.update.parse(params)
       const userUpdated = await prisma.users.update({
@@ -95,7 +95,7 @@ export namespace UserService {
     }
   }
   export const activate = async (
-    params: UserTypes.active): Promise<users> => {
+    params: UserTypes.active): Promise<Users> => {
     try {
       const { id } = UsersValidation.activate.parse(params)
 
@@ -132,6 +132,8 @@ export namespace UserService {
     try {
       const { id, email, password } = UsersValidation.destroy.parse(params)
 
+      console.log(email, password)
+
       await prisma.users.delete({
         where: { id }
       })
@@ -147,7 +149,7 @@ export namespace UserService {
 
 export namespace CampaignService {
   export const get = async (
-    params: CampaignTypes.get): Promise<{ campaign: campaigns[], total: number }> => {
+    params: CampaignTypes.get): Promise<{ campaign: Campaigns[], total: number }> => {
     try {
       const { id, user, page, perPage } = CampaignValidation.get.parse(params)
 
@@ -176,7 +178,7 @@ export namespace CampaignService {
     }
   }
   export const create = async (
-    params: CampaignTypes.create): Promise<campaigns> => {
+    params: CampaignTypes.create): Promise<Campaigns> => {
     try {
       const { name, user } = CampaignValidation.create.parse(params)
 
@@ -196,7 +198,7 @@ export namespace CampaignService {
     }
   }
   export const update = async (
-    params: CampaignTypes.update): Promise<campaigns> => {
+    params: CampaignTypes.update): Promise<Campaigns> => {
     try {
       const { id, name } = CampaignValidation.update.parse(params)
 

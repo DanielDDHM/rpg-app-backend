@@ -19,7 +19,7 @@ app.get('/health', async (_request, _reply) => ({
 }));
 
 // Run the server!
-app.listen({ port: Number(PORT) || 3000 }, function (err, address) {
+app.listen({ port: Number(PORT) || 3000 }, function (err) {
   console.log(`APP STARTED ON http://localhost:${PORT || 3000}`);
   if (err) {
     app.log.error(err)

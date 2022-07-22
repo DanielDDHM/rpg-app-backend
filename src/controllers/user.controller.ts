@@ -1,8 +1,8 @@
 import { StatusCode } from "../constants";
 import { PresenterFactory } from "../factories";
 import {
-  campaigns,
-  users
+  Campaigns,
+  Users
 } from "@prisma/client";
 import {
   FastifyReply,
@@ -29,7 +29,7 @@ export namespace UserController {
     const user = await UserService.get(req.query as UserTypes.get)
 
     return res.status(StatusCode.OK).send(
-      new PresenterFactory<{ user: users[], total: number }>(
+      new PresenterFactory<{ user: Users[], total: number }>(
         user,
         ['SUCCESS'],
       )
@@ -41,7 +41,7 @@ export namespace UserController {
     const userCreated = await UserService.create(req.body as UserTypes.create)
 
     return res.status(StatusCode.OK).send(
-      new PresenterFactory<users>(
+      new PresenterFactory<Users>(
         userCreated,
         ['SUCCESS'],
       )
@@ -54,7 +54,7 @@ export namespace UserController {
     const userUpdated = await UserService.update({ id, ...body } as UserTypes.update)
 
     return res.status(StatusCode.OK).send(
-      new PresenterFactory<users>(
+      new PresenterFactory<Users>(
         userUpdated,
         ['SUCCESS'],
       )
@@ -67,7 +67,7 @@ export namespace UserController {
     const userActivated = await UserService.activate({ id } as UserTypes.active)
 
     return res.status(StatusCode.OK).send(
-      new PresenterFactory<users>(
+      new PresenterFactory<Users>(
         userActivated,
         ['SUCCESS'],
       )
@@ -94,7 +94,7 @@ export namespace CampaignController {
     const campaign = await CampaignService.get(req.query as GenericTypes.get)
 
     return res.status(StatusCode.OK).send(
-      new PresenterFactory<{ campaign: campaigns[], total: number }>(
+      new PresenterFactory<{ campaign: Campaigns[], total: number }>(
         campaign,
         ['SUCCESS'],
       )
@@ -107,7 +107,7 @@ export namespace CampaignController {
     const campaign = await CampaignService.create(req.body as CampaignTypes.create)
 
     return res.status(StatusCode.OK).send(
-      new PresenterFactory<campaigns>(
+      new PresenterFactory<Campaigns>(
         campaign,
         ['SUCCESS'],
       )
@@ -120,7 +120,7 @@ export namespace CampaignController {
     const campaign = await CampaignService.update({ id, ...body } as CampaignTypes.update)
 
     return res.status(StatusCode.OK).send(
-      new PresenterFactory<campaigns>(
+      new PresenterFactory<Campaigns>(
         campaign,
         ['SUCCESS'],
       )

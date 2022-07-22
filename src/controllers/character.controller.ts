@@ -1,4 +1,4 @@
-import { character } from "@prisma/client"
+import { Character } from "@prisma/client"
 import { StatusCode } from "../constants"
 import { PresenterFactory } from "../factories"
 import { CharacterService } from "../services"
@@ -19,7 +19,7 @@ export namespace CharacterController {
     const char = await CharacterService.get(req.params as GenericTypes.get)
 
     return res.status(StatusCode.OK).send(
-      new PresenterFactory<{ characters: character[], total: number }>(
+      new PresenterFactory<{ characters: Character[], total: number }>(
         char,
         ['SUCCESS'],
       )
@@ -31,7 +31,7 @@ export namespace CharacterController {
     const char = await CharacterService.create(req.body as CharacterType.create)
 
     return res.status(StatusCode.OK).send(
-      new PresenterFactory<character>(
+      new PresenterFactory<Character>(
         char,
         ['SUCCESS'],
       )
@@ -43,7 +43,7 @@ export namespace CharacterController {
     const char = await CharacterService.update(req.params as CharacterType.update)
 
     return res.status(StatusCode.OK).send(
-      new PresenterFactory<character>(
+      new PresenterFactory<Character>(
         char,
         ['SUCCESS'],
       )
@@ -55,7 +55,7 @@ export namespace CharacterController {
     const char = await CharacterService.killOrRevive(req.params as GenericTypes.id)
 
     return res.status(StatusCode.OK).send(
-      new PresenterFactory<character>(
+      new PresenterFactory<Character>(
         char,
         ['SUCCESS'],
       )
@@ -75,38 +75,38 @@ export namespace CharacterController {
   }
 }
 
-export namespace SkillsController {
-  export const get = async (
-    req: FastifyRequest,
-    res: FastifyReply) => { }
+// export namespace SkillsController {
+//   export const get = async (
+//     req: FastifyRequest,
+//     res: FastifyReply) => { }
 
-  export const add = async (
-    req: FastifyRequest,
-    res: FastifyReply) => { }
+//   export const add = async (
+//     req: FastifyRequest,
+//     res: FastifyReply) => { }
 
-  export const edit = async (
-    req: FastifyRequest,
-    res: FastifyReply) => { }
+//   export const edit = async (
+//     req: FastifyRequest,
+//     res: FastifyReply) => { }
 
-  export const remove = async (
-    req: FastifyRequest,
-    res: FastifyReply) => { }
-}
+//   export const remove = async (
+//     req: FastifyRequest,
+//     res: FastifyReply) => { }
+// }
 
-export namespace ItemsController {
-  export const get = async (
-    req: FastifyRequest,
-    res: FastifyReply) => { }
+// export namespace ItemsController {
+//   export const get = async (
+//     req: FastifyRequest,
+//     res: FastifyReply) => { }
 
-  export const add = async (
-    req: FastifyRequest,
-    res: FastifyReply) => { }
+//   export const add = async (
+//     req: FastifyRequest,
+//     res: FastifyReply) => { }
 
-  export const edit = async (
-    req: FastifyRequest,
-    res: FastifyReply) => { }
+//   export const edit = async (
+//     req: FastifyRequest,
+//     res: FastifyReply) => { }
 
-  export const remove = async (
-    req: FastifyRequest,
-    res: FastifyReply) => { }
-}
+//   export const remove = async (
+//     req: FastifyRequest,
+//     res: FastifyReply) => { }
+// }
