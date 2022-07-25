@@ -2,6 +2,9 @@ import { z } from "zod";
 
 export namespace SkillsValidation {
   export const get = z.object({
+    id: z.string()
+      .min(2, { message: 'NON_EMPTY' })
+      .optional(),
     char: z.string()
       .min(2, { message: 'NON_EMPTY' })
       .optional(),

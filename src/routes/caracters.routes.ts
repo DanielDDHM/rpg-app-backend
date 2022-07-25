@@ -4,7 +4,7 @@ import {
 } from 'fastify';
 import {
   CharacterController,
-  // ItemsController,
+  ItemsController,
   // SkillsController
 } from '../controllers';
 
@@ -20,11 +20,11 @@ const caractersRouter = (
     .patch('/killorrevive/:id', CharacterController.killOrRevive)
     .delete('/delete/:id', CharacterController.destroy)
 
-  // fastify
-  //   .get('/:id/items', ItemsController.get)
-  //   .post('/:id/additem', ItemsController.add)
-  //   .put('/:id/edititem/id', ItemsController.edit)
-  //   .delete('/:id/removeitem/id', ItemsController.remove)
+  fastify
+    .get('/items', ItemsController.get)
+    .post('/:id/additem', ItemsController.add)
+    .put('/:id/edititem', ItemsController.edit)
+    .patch('/:id/removeitem', ItemsController.remove)
 
   // fastify
   //   .get('/:id/skills', SkillsController.get)

@@ -2,14 +2,11 @@ import { z } from "zod";
 
 export namespace ItemsValidation {
   export const get = z.object({
-    char: z.string()
+    id: z.string()
       .min(2, { message: 'NON_EMPTY' })
       .optional(),
-    page: z.number()
-      .nonnegative()
-      .optional(),
-    perPage: z.number()
-      .nonnegative()
+    char: z.string()
+      .min(2, { message: 'NON_EMPTY' })
       .optional()
   }).strict();
 
@@ -45,6 +42,8 @@ export namespace ItemsValidation {
 
   export const remove = z.object({
     id: z.string()
+      .min(2, { message: 'NON_EMPTY' }),
+    char: z.string()
       .min(2, { message: 'NON_EMPTY' }),
   }).strict();
 }
