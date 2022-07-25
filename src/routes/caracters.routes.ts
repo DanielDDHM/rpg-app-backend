@@ -5,6 +5,7 @@ import {
 import {
   CharacterController,
   ItemsController,
+  SkillsController,
   // SkillsController
 } from '../controllers';
 
@@ -26,11 +27,11 @@ const caractersRouter = (
     .put('/:id/edititem', ItemsController.edit)
     .patch('/:id/removeitem', ItemsController.remove)
 
-  // fastify
-  //   .get('/:id/skills', SkillsController.get)
-  //   .post('/:id/addskills', SkillsController.add)
-  //   .put('/:id/editskill/id', SkillsController.edit)
-  //   .delete('/:id/removeskill/id', SkillsController.remove)
+  fastify
+    .get('/skill', SkillsController.get)
+    .post('/:id/addskill', SkillsController.add)
+    .put('/:id/editskill', SkillsController.edit)
+    .patch('/:id/removeskill', SkillsController.remove)
 
   done();
 };

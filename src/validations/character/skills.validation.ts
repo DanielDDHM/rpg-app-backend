@@ -7,12 +7,6 @@ export namespace SkillsValidation {
       .optional(),
     char: z.string()
       .min(2, { message: 'NON_EMPTY' })
-      .optional(),
-    page: z.number()
-      .nonnegative()
-      .optional(),
-    perPage: z.number()
-      .nonnegative()
       .optional()
   }).strict();
 
@@ -56,6 +50,8 @@ export namespace SkillsValidation {
 
   export const remove = z.object({
     id: z.string()
+      .min(2, { message: 'NON_EMPTY' }),
+    char: z.string()
       .min(2, { message: 'NON_EMPTY' }),
   }).strict();
 }
