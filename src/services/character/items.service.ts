@@ -82,7 +82,7 @@ export namespace ItemsService {
         where: { id: char }
       })
 
-      charFind!.items[charFind!.items.findIndex((item<Character['items']>) => item?.id! === id)] = item
+      charFind!.items[charFind!.items.findIndex(item => item?.id! === id)] = item
 
       const charUpdated = await prisma.character.update({
         where: {
