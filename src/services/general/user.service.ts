@@ -7,6 +7,7 @@ import {
   Messages,
   StatusCode
 } from "../../constants"
+import { PasswordCrypt } from "../../helpers/auth"
 
 export namespace UserService {
   export const get = async (
@@ -42,7 +43,7 @@ export namespace UserService {
   export const create = async (
     params: UserTypes.create): Promise<Users> => {
     try {
-      const { nick, name, email, phone, password, } = UsersValidation.create.parse(params)
+      const { nick, name, email, phone, password } = UsersValidation.create.parse(params)
 
       const userCreated = await prisma.users.create({
         data: {
@@ -50,7 +51,7 @@ export namespace UserService {
           name,
           email,
           phone,
-          password
+          password: await PasswordCrypt.crypt({pass: password, salt: 6})
         }
       })
 
@@ -73,7 +74,7 @@ export namespace UserService {
           name,
           email,
           phone,
-          password
+          password: await PasswordCrypt.crypt({pass: password, salt: 6})
         }
       })
 

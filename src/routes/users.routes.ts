@@ -13,11 +13,11 @@ const userRouter = (
   done: Function,
 ) => {
   fastify
-    .get('/get/:id?', UserController.get)
-    .post('/create', UserController.create)
-    .put('/update/:id', UserController.update)
-    .patch('/active/:id', UserController.activate)
-    .delete('/delete/:id', UserController.destroy)
+    .get('/:id?', UserController.get)
+    .post('/', UserController.create)
+    .put('/:id', UserController.update)
+    .patch('/:id', UserController.activate)
+    .delete('/:id', UserController.destroy)
 
   done();
 };
@@ -28,10 +28,10 @@ const campaignRouter = (
   done: Function,
 ) => {
   fastify
-    .get('/get/:id?', CampaignController.get)
-    .post('/create', CampaignController.create)
-    .put('/update/:id', CampaignController.update)
-    .delete('/delete/:id', CampaignController.destroy)
+    .get('/:id?', CampaignController.get)
+    .post('/', CampaignController.create)
+    .put('/:id', CampaignController.update)
+    .delete('/:id', CampaignController.destroy)
 
   done();
 };
