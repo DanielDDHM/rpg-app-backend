@@ -1,9 +1,7 @@
 import 'dotenv/config';
 import jwt from 'jsonwebtoken';
 
-// import jwt from 'jsonwebtoken';
 import {
-  DoneFuncWithErrOrRes,
   FastifyReply,
   FastifyRequest
 } from 'fastify';
@@ -28,7 +26,7 @@ export namespace AuthMiddleware {
   export const verifyToken = async (
     req: FastifyRequest,
     res: FastifyReply,
-    done: DoneFuncWithErrOrRes) => {
+    done: Function) => {
     try {
       const token = String(req.headers['x-access-token'])
       if (!token) throw new Exception.AppError(
@@ -39,7 +37,6 @@ export namespace AuthMiddleware {
       if (verify) {
         return done()
       }
-    // TODO: FINISH THE AUTH
 
     } catch (error: any) {
       res.status(error.statusCode).send(error)

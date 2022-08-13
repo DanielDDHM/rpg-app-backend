@@ -6,7 +6,6 @@ import {
   CharacterController,
   ItemsController,
   SkillsController,
-  // SkillsController
 } from '../controllers';
 
 const caractersRouter = (

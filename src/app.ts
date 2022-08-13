@@ -12,6 +12,7 @@ app.register(cors, {
 })
 
 routes(app)
+
 // Declare a route
 app.get('/health', async (_request, _reply) => ({
   status: 'UP',

@@ -1,6 +1,18 @@
 import { PrismaClient } from '@prisma/client';
 
-const client = new PrismaClient();
+const client = new PrismaClient()
 
-export * from '@prisma/client';
+async function connect() {
+  await client.$connect()
+  .then(() => {
+    console.log('CONECTED')
+  })
+  .catch((e) => {
+    console.error(e)
+    process.exit(1)
+  })
+}
+
+connect()
+
 export default client;
