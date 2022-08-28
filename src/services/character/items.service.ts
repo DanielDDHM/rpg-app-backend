@@ -27,7 +27,14 @@ export namespace ItemsService {
       return items
 
     } catch (error: any) {
-      console.log(error)
+
+      if(error instanceof Exception.AppError){
+        throw new Exception.AppError(
+          error?.statusCode,
+          error?.messages
+        )
+      }
+      
       throw new Exception.AppError(
         StatusCode.INTERNAL_SERVER_ERROR,
         [error])
@@ -61,7 +68,14 @@ export namespace ItemsService {
 
       return charUpdated.items
     } catch (error: any) {
-      console.log(error)
+      
+      if(error instanceof Exception.AppError){
+        throw new Exception.AppError(
+          error?.statusCode,
+          error?.messages
+        )
+      }
+
       throw new Exception.AppError(
         StatusCode.INTERNAL_SERVER_ERROR,
         [error])

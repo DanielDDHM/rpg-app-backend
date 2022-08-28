@@ -168,9 +168,14 @@ export namespace UserService {
     try {
       const { id, email, password } = UsersValidation.destroy.parse(params)
 
-      console.log(email, password)
+      const {user} = await UserService.get({id})
 
-      await UserService.get({id})
+      const passMatch = await PasswordCrypt.compare({pass: password!, userP: user[0].password});
+
+        if(user[0].email !== email || !passMatch){
+          throw new Exception.AppError(StatusCode.BAD_REQUEST, ['DATA IS INCORRECT'])
+        }
+
 
       await prisma.users.delete({
         where: { id }

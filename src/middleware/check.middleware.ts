@@ -7,6 +7,7 @@ import {
 } from 'fastify';
 import {
   
+  Messages,
   StatusCode
 } from '../constants';
 import { Exception } from '../helpers';
