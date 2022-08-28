@@ -1,9 +1,10 @@
 import { Campaigns } from "@prisma/client"
 import { prisma } from "../../config"
-import { Messages, StatusCode } from "../../constants"
+import { StatusCode } from "../../constants"
 import { Exception } from "../../helpers"
 import { CampaignTypes } from "../../types"
 import { CampaignValidation, GenericValidation } from "../../validations"
+import { UserService } from "./user.service"
 
 export namespace CampaignService {
   export const get = async (
@@ -27,38 +28,61 @@ export namespace CampaignService {
         prisma.campaigns.count({ where: (id || user) ? query : {}, })
       ])
 
+      if(!campaign || total === 0){
+        throw new Exception.AppError(StatusCode.BAD_REQUEST, ['CAMPAIGN NOT EXIST'])
+      }
+
       return { campaign, total: total }
 
     } catch (error: any) {
+      if(error instanceof Exception.AppError){
+        throw new Exception.AppError(
+          error?.statusCode,
+          error?.messages
+        )
+      }
+
       throw new Exception.AppError(
         StatusCode.INTERNAL_SERVER_ERROR,
-        [Messages.StatusMessage.INTERNAL_SERVER_ERROR])
+        [error])
     }
   }
   export const create = async (
     params: CampaignTypes.create): Promise<Campaigns> => {
     try {
-      const { name, user } = CampaignValidation.create.parse(params)
+      const { name, usersId } = CampaignValidation.create.parse(params)
+
+      await UserService.get({id: usersId})
 
       const campaign = await prisma.campaigns.create({
         data: {
           name,
-          usersId: user
+          usersId
         }
       })
 
       return campaign
 
     } catch (error: any) {
+      if(error instanceof Exception.AppError){
+        throw new Exception.AppError(
+          error?.statusCode,
+          error?.messages
+        )
+      }
+
       throw new Exception.AppError(
         StatusCode.INTERNAL_SERVER_ERROR,
-        [Messages.StatusMessage.INTERNAL_SERVER_ERROR])
+        [error])
     }
   }
+
   export const update = async (
     params: CampaignTypes.update): Promise<Campaigns> => {
     try {
       const { id, name } = CampaignValidation.update.parse(params)
+
+      await CampaignService.get({id})
 
       const campaign = await prisma.campaigns.update({
         where: {
@@ -71,15 +95,24 @@ export namespace CampaignService {
 
       return campaign
     } catch (error: any) {
+      if(error instanceof Exception.AppError){
+        throw new Exception.AppError(
+          error?.statusCode,
+          error?.messages
+        )
+      }
+
       throw new Exception.AppError(
         StatusCode.INTERNAL_SERVER_ERROR,
-        [Messages.StatusMessage.INTERNAL_SERVER_ERROR])
+        [error])
     }
   }
   export const destroy = async (
     params: CampaignTypes.destroy): Promise<{ message: string }> => {
     try {
       const { id } = GenericValidation.id.parse(params)
+
+      await CampaignService.get({id})
 
       const campaign = await prisma.campaigns.delete({
         where: {
@@ -90,9 +123,16 @@ export namespace CampaignService {
       return { message: `Campaign ${campaign.name}, with id: ${id} has been deleted` }
 
     } catch (error: any) {
+      if(error instanceof Exception.AppError){
+        throw new Exception.AppError(
+          error?.statusCode,
+          error?.messages
+        )
+      }
+
       throw new Exception.AppError(
         StatusCode.INTERNAL_SERVER_ERROR,
-        [Messages.StatusMessage.INTERNAL_SERVER_ERROR])
+        [error])
     }
   }
 }

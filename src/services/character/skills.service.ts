@@ -1,10 +1,11 @@
 import { Character } from "@prisma/client"
 import { prisma } from "../../config"
-import { Messages, StatusCode } from "../../constants"
+import {  StatusCode } from "../../constants"
 import { Exception } from "../../helpers"
 import { SkillsType } from "../../types"
 import { SkillsValidation } from "../../validations"
 import { v4 as uuid } from "uuid"
+import { CharacterService } from "./caracter.service"
 
 export namespace SkillsService {
   export const get = async (
@@ -12,19 +13,26 @@ export namespace SkillsService {
     try {
       const { id, char } = SkillsValidation.get.parse(params)
 
-      const charFind = await prisma.character.findFirst({
-        where: {
-          id: char
-        }
-      })
+      const charFind = await CharacterService.get({id: char})
 
-      const skill = id ? [charFind?.magics.find(magic => magic?.id! === id)!] : charFind?.magics!
+      const skill = id ? [charFind[0]?.magics.find(magic => magic?.id! === id)!] : charFind[0]?.magics!
+
+      if(skill.length === 0){
+        throw new Exception.AppError(StatusCode.BAD_REQUEST, ['ITEM NOT FOUND'])
+      }
 
       return skill
     } catch (error: any) {
+      if(error instanceof Exception.AppError){
+        throw new Exception.AppError(
+          error?.statusCode,
+          error?.messages
+        )
+      }
+
       throw new Exception.AppError(
         StatusCode.INTERNAL_SERVER_ERROR,
-        [Messages.StatusMessage.INTERNAL_SERVER_ERROR])
+        [error])
     }
   }
   export const add = async (
@@ -61,9 +69,16 @@ export namespace SkillsService {
 
       return charUpdated.magics
     } catch (error: any) {
+      if(error instanceof Exception.AppError){
+        throw new Exception.AppError(
+          error?.statusCode,
+          error?.messages
+        )
+      }
+
       throw new Exception.AppError(
         StatusCode.INTERNAL_SERVER_ERROR,
-        [Messages.StatusMessage.INTERNAL_SERVER_ERROR])
+        [error])
     }
   }
   export const edit = async (
@@ -90,49 +105,59 @@ export namespace SkillsService {
         range
       }
 
-      const charFind = await prisma.character.findFirst({
-        where: { id: char }
-      })
+      const charFind = await CharacterService.get({id: char})
 
-      charFind!.magics[charFind!.magics.findIndex(skill => skill?.id! === id)] = skill
+      charFind[0]!.magics[charFind[0]!.magics.findIndex(skill => skill?.id! === id)] = skill
 
       const charUpdated = await prisma.character.update({
         where: {
           id: char,
         },
-        data: { magics: charFind?.magics }
+        data: { magics: charFind[0]?.magics }
       })
 
       return charUpdated.magics
 
     } catch (error: any) {
+      if(error instanceof Exception.AppError){
+        throw new Exception.AppError(
+          error?.statusCode,
+          error?.messages
+        )
+      }
+
       throw new Exception.AppError(
         StatusCode.INTERNAL_SERVER_ERROR,
-        [Messages.StatusMessage.INTERNAL_SERVER_ERROR])
+        [error])
     }
   }
   export const remove = async (params: SkillsType.remove) => {
     try {
       const { id, char } = SkillsValidation.remove.parse(params)
 
-      const charFind = await prisma.character.findFirst({
-        where: { id: char }
-      })
+      const charFind = await CharacterService.get({id: char})
 
-      charFind!.magics.splice(charFind!.magics.findIndex(skills => skills?.id! === id), 1)
+      charFind[0]!.magics.splice(charFind[0]!.magics.findIndex(skills => skills?.id! === id), 1)
 
       const charUpdated = await prisma.character.update({
         where: {
           id: char,
         },
-        data: { magics: charFind?.magics }
+        data: { magics: charFind[0]?.magics }
       })
 
       return charUpdated.magics
     } catch (error: any) {
+      if(error instanceof Exception.AppError){
+        throw new Exception.AppError(
+          error?.statusCode,
+          error?.messages
+        )
+      }
+
       throw new Exception.AppError(
         StatusCode.INTERNAL_SERVER_ERROR,
-        [Messages.StatusMessage.INTERNAL_SERVER_ERROR])
+        [error])
     }
   }
 }

@@ -2,7 +2,7 @@ import { Character } from "@prisma/client"
 import { Exception } from "../../helpers"
 import { prisma } from "../../config"
 import {
-  Messages,
+  
   StatusCode
 } from "../../constants"
 import {
@@ -13,6 +13,7 @@ import {
   CharacterValidation,
   GenericValidation
 } from "../../validations"
+import { CampaignService, UserService } from "../general"
 
 export namespace CharacterService {
   export const get = async (
@@ -36,12 +37,23 @@ export namespace CharacterService {
         prisma.character.count({ where: (id || user) ? query : {}, })
       ])
 
+      if(!char || total === 0){
+        throw new Exception.AppError(StatusCode.BAD_REQUEST, ['CHAR NOT EXIST'])
+      }
+
       return { characters: char, total: total }
 
     } catch (error: any) {
+      if(error instanceof Exception.AppError){
+        throw new Exception.AppError(
+          error?.statusCode,
+          error?.messages
+        )
+      }
+
       throw new Exception.AppError(
         StatusCode.INTERNAL_SERVER_ERROR,
-        [Messages.StatusMessage.INTERNAL_SERVER_ERROR])
+        [error])
     }
   }
   export const create = async (
@@ -56,6 +68,11 @@ export namespace CharacterService {
         slots,
         status
       } = CharacterValidation.create.parse(params)
+
+      await Promise.all([
+        CampaignService.get({id: campaign}),
+        UserService.get({id: owner})
+      ])
 
       const char = await prisma.character.create({
         data: {
@@ -72,11 +89,19 @@ export namespace CharacterService {
       return char
 
     } catch (error: any) {
+      if(error instanceof Exception.AppError){
+        throw new Exception.AppError(
+          error?.statusCode,
+          error?.messages
+        )
+      }
+
       throw new Exception.AppError(
         StatusCode.INTERNAL_SERVER_ERROR,
-        [Messages.StatusMessage.INTERNAL_SERVER_ERROR])
+        [error])
     }
   }
+
   export const update = async (
     params: CharacterType.update): Promise<Character> => {
     try {
@@ -90,6 +115,12 @@ export namespace CharacterService {
         slots,
         status
       } = CharacterValidation.update.parse(params)
+
+      await Promise.all([
+        get({id}),
+        CampaignService.get({id: campaign}),
+        UserService.get({id: owner})
+      ])
 
       const char = await prisma.character.update({
         where: {
@@ -108,21 +139,30 @@ export namespace CharacterService {
 
       return char
     } catch (error: any) {
+      if(error instanceof Exception.AppError){
+        throw new Exception.AppError(
+          error?.statusCode,
+          error?.messages
+        )
+      }
+
       throw new Exception.AppError(
         StatusCode.INTERNAL_SERVER_ERROR,
-        [Messages.StatusMessage.INTERNAL_SERVER_ERROR])
+        [error])
     }
   }
+
+
   export const killOrRevive = async (
     params: GenericTypes.get) => {
     try {
       const { id } = GenericValidation.id.parse(params)
 
-      const charFind = await prisma.character.findFirst({
-        where: { id }
-      })
+      const charFind = get({id})
+
+
       let act;
-      switch (charFind?.isAlive) {
+      switch (charFind[0]?.isAlive) {
         case true:
           act = false
           break;
@@ -140,15 +180,25 @@ export namespace CharacterService {
 
       return char
     } catch (error: any) {
+      if(error instanceof Exception.AppError){
+        throw new Exception.AppError(
+          error?.statusCode,
+          error?.messages
+        )
+      }
+
       throw new Exception.AppError(
         StatusCode.INTERNAL_SERVER_ERROR,
-        [Messages.StatusMessage.INTERNAL_SERVER_ERROR])
+        [error])
     }
   }
   export const destroy = async (
     params: CharacterType.destroy): Promise<{ message: string }> => {
     try {
       const { id } = GenericValidation.id.parse(params)
+
+      await get({id})
+
       const char = await prisma.character.delete({
         where: { id }
       })
@@ -156,9 +206,16 @@ export namespace CharacterService {
 
       return { message: `user ${char.id} has been deleted` }
     } catch (error: any) {
+      if(error instanceof Exception.AppError){
+        throw new Exception.AppError(
+          error?.statusCode,
+          error?.messages
+        )
+      }
+
       throw new Exception.AppError(
         StatusCode.INTERNAL_SERVER_ERROR,
-        [Messages.StatusMessage.INTERNAL_SERVER_ERROR])
+        [error])
     }
   }
 }

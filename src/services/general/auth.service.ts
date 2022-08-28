@@ -1,5 +1,5 @@
 import { prisma } from "../../config";
-import { Messages, StatusCode } from "../../constants";
+import {  StatusCode } from "../../constants";
 import { Exception } from "../../helpers";
 import { GenericValidation } from "../../validations";
 import jwt from "jsonwebtoken";
@@ -38,9 +38,16 @@ export namespace AuthService {
       return { auth: true, token };
 
     } catch (error: any) {
+      if(error instanceof Exception.AppError){
+        throw new Exception.AppError(
+          error?.statusCode,
+          error?.messages
+        )
+      }
+
       throw new Exception.AppError(
         StatusCode.INTERNAL_SERVER_ERROR,
-        [Messages.StatusMessage.INTERNAL_SERVER_ERROR])
+        [error])
     }
   }
   export const logout = async () => {

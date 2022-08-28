@@ -4,7 +4,6 @@ import { UsersValidation } from "../../validations"
 import { prisma } from "../../config"
 import { Exception } from "../../helpers"
 import {
-  Messages,
   StatusCode
 } from "../../constants"
 import { PasswordCrypt } from "../../helpers/auth"
@@ -31,19 +30,43 @@ export namespace UserService {
         prisma.users.count({ where: (id || email) ? query : {}, })
       ])
 
+      if(!user || total === 0){
+        throw new Exception.AppError(StatusCode.BAD_REQUEST, ['USER NOT EXIST'])
+      }
+
       return { user, total: total }
 
 
     } catch (error: any) {
+      if(error instanceof Exception.AppError){
+        throw new Exception.AppError(
+          error?.statusCode,
+          error?.messages
+        )
+      }
+
       throw new Exception.AppError(
         StatusCode.INTERNAL_SERVER_ERROR,
-        [Messages.StatusMessage.INTERNAL_SERVER_ERROR])
+        [error])
     }
   }
   export const create = async (
     params: UserTypes.create): Promise<Users> => {
     try {
       const { nick, name, email, phone, password } = UsersValidation.create.parse(params)
+
+      const userExists = await prisma.users.findMany({
+        where:{
+          OR:[
+            {nick},
+            {email}
+          ]
+        }
+      })
+
+      if(userExists && userExists.length > 0){
+        throw new Exception.AppError(StatusCode.BAD_REQUEST, ['USER EXIST'])
+      }
 
       const userCreated = await prisma.users.create({
         data: {
@@ -57,15 +80,25 @@ export namespace UserService {
 
       return userCreated
     } catch (error: any) {
+      if(error instanceof Exception.AppError){
+        throw new Exception.AppError(
+          error?.statusCode,
+          error?.messages
+        )
+      }
+
       throw new Exception.AppError(
         StatusCode.INTERNAL_SERVER_ERROR,
-        [Messages.StatusMessage.INTERNAL_SERVER_ERROR])
+        [error])
     }
   }
   export const update = async (
     params: UserTypes.update): Promise<Users> => {
     try {
-      const { id, name, email, phone, password, } = UsersValidation.update.parse(params)
+      const { id, name, email, phone, password } = UsersValidation.update.parse(params)
+
+      await UserService.get({id})
+
       const userUpdated = await prisma.users.update({
         where: {
           id
@@ -80,9 +113,16 @@ export namespace UserService {
 
       return userUpdated
     } catch (error: any) {
+      if(error instanceof Exception.AppError){
+        throw new Exception.AppError(
+          error?.statusCode,
+          error?.messages
+        )
+      }
+
       throw new Exception.AppError(
         StatusCode.INTERNAL_SERVER_ERROR,
-        [Messages.StatusMessage.INTERNAL_SERVER_ERROR])
+        [error])
     }
   }
   export const activate = async (
@@ -90,12 +130,10 @@ export namespace UserService {
     try {
       const { id } = UsersValidation.activate.parse(params)
 
-      const user = await prisma.users.findFirst({
-        where: { id }
-      }).then()
+      const {user} = await UserService.get({id})
 
       let act;
-      switch (user?.isActive) {
+      switch (user[0]?.isActive) {
         case true:
           act = false
           break;
@@ -113,9 +151,16 @@ export namespace UserService {
 
       return updatedUser
     } catch (error: any) {
+      if(error instanceof Exception.AppError){
+        throw new Exception.AppError(
+          error?.statusCode,
+          error?.messages
+        )
+      }
+
       throw new Exception.AppError(
         StatusCode.INTERNAL_SERVER_ERROR,
-        [Messages.StatusMessage.INTERNAL_SERVER_ERROR])
+        [error])
     }
   }
   export const destroy = async (
@@ -125,15 +170,24 @@ export namespace UserService {
 
       console.log(email, password)
 
+      await UserService.get({id})
+
       await prisma.users.delete({
         where: { id }
       })
 
       return { message: `User ${id} has Deleted` }
     } catch (error: any) {
+      if(error instanceof Exception.AppError){
+        throw new Exception.AppError(
+          error?.statusCode,
+          error?.messages
+        )
+      }
+
       throw new Exception.AppError(
         StatusCode.INTERNAL_SERVER_ERROR,
-        [Messages.StatusMessage.INTERNAL_SERVER_ERROR])
+        [error])
     }
   }
 }

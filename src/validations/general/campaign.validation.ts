@@ -19,7 +19,7 @@ export namespace CampaignValidation {
     name: z.string()
       .min(2, { message: 'MIN_LENGHT_3' })
       .max(10, { message: 'MAX_LENGTH_10' }),
-    user: z.string()
+    usersId: z.string()
       .min(2, { message: 'MIN_LENGHT_3' })
   }).strict();
 

@@ -36,6 +36,9 @@ export namespace UsersValidation {
   export const update = z.object({
     id: z.string()
       .min(2, { message: 'MIN_LENGHT_3' }),
+    nick: z.string()
+      .min(2, { message: 'MIN_LENGHT_3' })
+      .max(10, { message: 'MAX_LENGTH_10' }),
     name: z.string()
       .min(2, { message: 'MIN_LENGHT_3' })
       .max(10, { message: 'MAX_LENGTH_10' }),

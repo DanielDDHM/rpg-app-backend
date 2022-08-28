@@ -1,5 +1,5 @@
 import { ExternalRequest } from "../../config"
-import { Messages, StatusCode, Urls } from "../../constants"
+import {  StatusCode, Urls } from "../../constants"
 import { Exception } from "../exception"
 
 export namespace DnDRequest {
@@ -12,7 +12,7 @@ export namespace DnDRequest {
     } catch (error) {
       throw new Exception.AppError(
         StatusCode.INTERNAL_SERVER_ERROR,
-        [Messages.StatusMessage.INTERNAL_SERVER_ERROR])
+        [error])
     }
   }
 
@@ -24,7 +24,7 @@ export namespace DnDRequest {
     } catch (error) {
       throw new Exception.AppError(
         StatusCode.INTERNAL_SERVER_ERROR,
-        [Messages.StatusMessage.INTERNAL_SERVER_ERROR])
+        [error])
     }
   }
 
@@ -36,7 +36,7 @@ export namespace DnDRequest {
     } catch (error) {
       throw new Exception.AppError(
         StatusCode.INTERNAL_SERVER_ERROR,
-        [Messages.StatusMessage.INTERNAL_SERVER_ERROR])
+        [error])
     }
   }
 }
