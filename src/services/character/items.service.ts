@@ -16,9 +16,9 @@ export namespace ItemsService {
     try {
       const { id, char } = ItemsValidation.get.parse(params)
 
-      const charFind = await CharacterService.get({id: char})
+      const {characters} = await CharacterService.get({id: char})
 
-      const items = id ? [charFind[0]?.items.find(item => item?.id! === id)!] : charFind[0]?.items!
+      const items = id ? [characters[0]?.items.find(item => item?.id! === id)!] : characters[0]?.items!
 
       if(items.length === 0){
         throw new Exception.AppError(StatusCode.BAD_REQUEST, ['ITEM NOT FOUND'])
@@ -27,6 +27,7 @@ export namespace ItemsService {
       return items
 
     } catch (error: any) {
+      console.log(error)
 
       if(error instanceof Exception.AppError){
         throw new Exception.AppError(
@@ -85,9 +86,6 @@ export namespace ItemsService {
     params: ItemsType.edit): Promise<Character["items"]> => {
     try {
       const { id, char, damage, name, properties, value, weight } = ItemsValidation.edit.parse(params)
-
-      await get({id})
-
       const item = {
         id,
         damage,
@@ -97,15 +95,15 @@ export namespace ItemsService {
         weight
       }
 
-      const charFind = await CharacterService.get({id: char})
+      const {characters} = await CharacterService.get({id: char})
 
-      charFind[0].items[charFind[0].items.findIndex(item => item?.id! === id)] = item
+      characters[0].items[characters[0].items.findIndex(item => item?.id! === id)] = item
 
       const charUpdated = await prisma.character.update({
         where: {
           id: char,
         },
-        data: { items: charFind[0]?.items }
+        data: { items: characters[0]?.items }
       })
 
       return charUpdated.items
@@ -129,17 +127,15 @@ export namespace ItemsService {
     try {
       const { id, char } = ItemsValidation.remove.parse(params)
 
-      await  get({id})
+      const {characters} = await CharacterService.get({id: char})
 
-      const charFind = await CharacterService.get({id: char})
-
-      charFind[0].items.splice(charFind[0].items.findIndex(item => item?.id! === id), 1)
+      characters[0].items.splice(characters[0].items.findIndex(item => item?.id! === id), 1)
 
       const charUpdated = await prisma.character.update({
         where: {
           id: char,
         },
-        data: { items: charFind[0].items }
+        data: { items: characters[0].items }
       })
 
       return charUpdated.items

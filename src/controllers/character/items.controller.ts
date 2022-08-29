@@ -10,7 +10,7 @@ import { GenericTypes, ItemsReqType, ItemsType } from "../../types"
 
 export namespace ItemsController {
   export const get = async (
-    req: FastifyRequest<{ Querystring: ItemsType.get }>,
+    req: FastifyRequest<{Querystring: ItemsType.get }>,
     res: FastifyReply) => {
 
     const items = await ItemsService.get(req.query as ItemsType.get)

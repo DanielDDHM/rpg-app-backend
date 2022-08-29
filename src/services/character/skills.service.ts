@@ -13,12 +13,12 @@ export namespace SkillsService {
     try {
       const { id, char } = SkillsValidation.get.parse(params)
 
-      const charFind = await CharacterService.get({id: char})
+      const {characters} = await CharacterService.get({id: char})
 
-      const skill = id ? [charFind[0]?.magics.find(magic => magic?.id! === id)!] : charFind[0]?.magics!
+      const skill = id ? [characters[0]?.magics.find(magic => magic?.id! === id)!] : characters[0]?.magics!
 
       if(skill.length === 0){
-        throw new Exception.AppError(StatusCode.BAD_REQUEST, ['ITEM NOT FOUND'])
+        throw new Exception.AppError(StatusCode.BAD_REQUEST, ['SKILL NOT FOUND'])
       }
 
       return skill
@@ -105,15 +105,15 @@ export namespace SkillsService {
         range
       }
 
-      const charFind = await CharacterService.get({id: char})
+      const {characters} = await CharacterService.get({id: char})
 
-      charFind[0]!.magics[charFind[0]!.magics.findIndex(skill => skill?.id! === id)] = skill
+      characters[0]!.magics[characters[0]!.magics.findIndex(skill => skill?.id! === id)] = skill
 
       const charUpdated = await prisma.character.update({
         where: {
           id: char,
         },
-        data: { magics: charFind[0]?.magics }
+        data: { magics: characters[0]?.magics }
       })
 
       return charUpdated.magics
@@ -135,15 +135,15 @@ export namespace SkillsService {
     try {
       const { id, char } = SkillsValidation.remove.parse(params)
 
-      const charFind = await CharacterService.get({id: char})
+      const {characters} = await CharacterService.get({id: char})
 
-      charFind[0]!.magics.splice(charFind[0]!.magics.findIndex(skills => skills?.id! === id), 1)
+      characters[0]!.magics.splice(characters[0]!.magics.findIndex(skills => skills?.id! === id), 1)
 
       const charUpdated = await prisma.character.update({
         where: {
           id: char,
         },
-        data: { magics: charFind[0]?.magics }
+        data: { magics: characters[0]?.magics }
       })
 
       return charUpdated.magics

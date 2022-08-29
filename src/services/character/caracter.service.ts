@@ -19,12 +19,13 @@ export namespace CharacterService {
   export const get = async (
     params: CharacterType.get): Promise<{ characters: Character[], total: number }> => {
     try {
-      const { id, user, page, perPage } = CharacterValidation.get.parse(params)
+      const { id, user, campaign, page, perPage } = CharacterValidation.get.parse(params)
 
       const query = {
         OR: [
           { id },
-          { userId: user }
+          { userId: user },
+          {campaignsId: campaign}
         ]
       }
 
@@ -158,11 +159,10 @@ export namespace CharacterService {
     try {
       const { id } = GenericValidation.id.parse(params)
 
-      const charFind = get({id})
-
+      const {characters} = await get({id})
 
       let act;
-      switch (charFind[0]?.isAlive) {
+      switch (characters[0].isAlive) {
         case true:
           act = false
           break;

@@ -8,6 +8,9 @@ export namespace CharacterValidation {
     user: z.string()
       .min(2, { message: 'NON_EMPTY' })
       .optional(),
+    campaign: z.string()
+    .min(2, { message: 'NON_EMPTY' })
+    .optional(),
     page: z.number()
       .nonnegative()
       .optional(),
