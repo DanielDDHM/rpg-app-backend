@@ -1,7 +1,8 @@
 # RPG APP BACKEND
 ## 👨🏻‍💻 About this project
-Backend For Bet App
-To acess docs 'localhost:4000/api-docs'
+RPG APP FOR ADMIN CHARS
+
+
 ## 🪓 Requirements
 
 - Docker

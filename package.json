@@ -12,7 +12,8 @@
     "dev:clear": "cross-env NODE_ENV=DEV ts-node-dev --clear --exit-child --transpile-only --ignore-watch node_modules src/app.ts",
     "lint": "eslint --ext js,ts src",
     "lint:fix": "eslint --ext js,ts src --fix",
-    "prepare": "husky install"
+    "docker:up": "docker-compose -f docker-compose.yml up -d",
+    "docker:down": "docker-compose down"
   },
   "devDependencies": {
     "@types/bcryptjs": "2.4.2",

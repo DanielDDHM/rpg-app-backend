@@ -12,8 +12,8 @@ model Campaigns {
   id        String      @id @unique @default(uuid())
   name      String
   master    Users       @relation(fields: [usersId], references: [id])
-  usersId   String
-  Character Character[]
+  usersId   String      @unique
+  character Character[]
   createdAt DateTime    @default(now())
   updatedAt DateTime?   @default(now())
 }
@@ -25,8 +25,8 @@ model Users {
   email     String      @unique
   phone     String
   password  String
-  Character Character[]
-  Campaigns Campaigns[]
+  character Character[]
+  campaigns Campaigns[]
   isActive  Boolean?    @default(true)
   createdAt DateTime    @default(now())
   updatedAt DateTime?   @default(now())
@@ -36,9 +36,9 @@ model Character {
   id          String    @id @unique @default(uuid())
   name        String
   owner       Users     @relation(fields: [usersId], references: [id])
-  usersId     String
+  usersId     String    @unique
   campaign    Campaigns @relation(fields: [campaignsId], references: [id])
-  campaignsId String
+  campaignsId String    @unique
   about       Json?
   slots       Json?
   atributes   Json?
