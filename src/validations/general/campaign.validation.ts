@@ -2,8 +2,8 @@ import { z } from "zod";
 
 export namespace CampaignValidation {
   export const get = z.object({
-    id: z.string()
-      .min(2, { message: 'MIN_LENGHT_3' })
+    id: z.number()
+    .nonnegative({message: 'NON_NEGATIVE'})
       .optional(),
     user: z.string()
       .min(2, { message: 'MIN_LENGHT_3' })
@@ -18,17 +18,17 @@ export namespace CampaignValidation {
   export const create = z.object({
     name: z.string()
       .min(2, { message: 'MIN_LENGHT_3' })
-      .max(10, { message: 'MAX_LENGTH_10' }),
-    usersId: z.string()
-      .min(2, { message: 'MIN_LENGHT_3' })
+      .max(25, { message: 'MAX_LENGTH_25' }),
+    usersId: z.number()
+    .nonnegative({message: 'NON_NEGATIVE'})
   }).strict();
 
   export const update = z.object({
-    id: z.string()
-      .min(2, { message: 'MIN_LENGHT_3' })
+    id: z.number()
+    .nonnegative({message: 'NON_NEGATIVE'})
       .optional(),
     name: z.string()
       .min(2, { message: 'MIN_LENGHT_3' })
-      .max(10, { message: 'MAX_LENGTH_10' }),
+      .max(25, { message: 'MAX_LENGTH_25' }),
   }).strict();
 }

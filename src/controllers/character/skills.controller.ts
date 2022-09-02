@@ -32,7 +32,7 @@ export namespace SkillsController {
     req: FastifyRequest<{ Params: GenericTypes.id, Body: SkillsReqType.add }>,
     res: FastifyReply) => {
 
-    const skills = await SkillsService.add({ char: req.params.id, ...req.body } as SkillsType.add)
+    const skills = await SkillsService.add({ char: Number(req.params.id), ...req.body } as SkillsType.add)
     return res.status(StatusCode.OK).send(
       new PresenterFactory<Character["magics"]>(
         skills,
@@ -45,7 +45,7 @@ export namespace SkillsController {
     req: FastifyRequest<{ Params: GenericTypes.id, Body: SkillsReqType.edit }>,
     res: FastifyReply) => {
 
-    const skills = await SkillsService.edit({ char: req.params.id, ...req.body } as SkillsType.edit)
+    const skills = await SkillsService.edit({ char: Number(req.params.id), ...req.body } as SkillsType.edit)
     return res.status(StatusCode.OK).send(
       new PresenterFactory<Character["magics"]>(
         skills,
@@ -58,7 +58,7 @@ export namespace SkillsController {
     req: FastifyRequest<{ Params: GenericTypes.id, Querystring: SkillsReqType.remove }>,
     res: FastifyReply) => {
 
-    const skills = await SkillsService.remove({ char: req.params.id, ...req.query } as SkillsType.remove)
+    const skills = await SkillsService.remove({ char: Number(req.params.id), ...req.query } as SkillsType.remove)
     return res.status(StatusCode.OK).send(
       new PresenterFactory<Character["magics"]>(
         skills,

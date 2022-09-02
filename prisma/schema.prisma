@@ -8,37 +8,37 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Campaigns {
-  id        String      @id @unique @default(uuid())
+model Campaign {
+  id        Int         @id @unique @default(autoincrement())
   name      String
   master    Users       @relation(fields: [usersId], references: [id])
-  usersId   String      @unique
+  usersId   Int         @unique
   character Character[]
   createdAt DateTime    @default(now())
   updatedAt DateTime?   @default(now())
 }
 
 model Users {
-  id        String      @id @unique @default(uuid())
+  id        Int         @id @unique @default(autoincrement())
   nick      String      @unique
   name      String
   email     String      @unique
   phone     String
   password  String
   character Character[]
-  campaigns Campaigns[]
+  campaigns Campaign[]
   isActive  Boolean?    @default(true)
   createdAt DateTime    @default(now())
   updatedAt DateTime?   @default(now())
 }
 
 model Character {
-  id          String    @id @unique @default(uuid())
+  id          Int       @id @unique @default(autoincrement())
   name        String
   owner       Users     @relation(fields: [usersId], references: [id])
-  usersId     String    @unique
-  campaign    Campaigns @relation(fields: [campaignsId], references: [id])
-  campaignsId String    @unique
+  usersId     Int       @unique
+  campaign    Campaign  @relation(fields: [campaignsId], references: [id])
+  campaignsId Int       @unique
   about       Json?
   slots       Json?
   atributes   Json?

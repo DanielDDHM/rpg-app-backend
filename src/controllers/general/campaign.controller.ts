@@ -1,4 +1,4 @@
-import { Campaigns } from "@prisma/client"
+import { Campaign } from "@prisma/client"
 import { StatusCode } from "../../constants"
 import { PresenterFactory } from "../../factories"
 import { CampaignService } from "../../services"
@@ -16,10 +16,10 @@ export namespace CampaignController {
   export const get = async (
     req: FastifyRequest<{ Querystring: GenericTypes.get }>,
     res: FastifyReply) => {
-    const campaign = await CampaignService.get(req.query as GenericTypes.get)
+    const campaign = await CampaignService.get({id: Number(req.query.id), ...req.query} as GenericTypes.get)
 
     return res.status(StatusCode.OK).send(
-      new PresenterFactory<{ campaign: Campaigns[], total: number }>(
+      new PresenterFactory<{ campaign: Campaign[], total: number }>(
         campaign,
         ['SUCCESS'],
       )
@@ -32,7 +32,7 @@ export namespace CampaignController {
     const campaign = await CampaignService.create(req.body as CampaignTypes.create)
 
     return res.status(StatusCode.OK).send(
-      new PresenterFactory<Campaigns>(
+      new PresenterFactory<Campaign>(
         campaign,
         ['SUCCESS'],
       )
@@ -42,10 +42,10 @@ export namespace CampaignController {
     req: FastifyRequest<{ Params: GenericTypes.id, Body: CampaignReqType.update }>,
     res: FastifyReply) => {
     const { params: { id }, body } = req
-    const campaign = await CampaignService.update({ id, ...body } as CampaignTypes.update)
+    const campaign = await CampaignService.update({ id: Number(id), ...body } as CampaignTypes.update)
 
     return res.status(StatusCode.OK).send(
-      new PresenterFactory<Campaigns>(
+      new PresenterFactory<Campaign>(
         campaign,
         ['SUCCESS'],
       )
@@ -54,7 +54,7 @@ export namespace CampaignController {
   export const destroy = async (
     req: FastifyRequest<{ Params: CampaignTypes.destroy }>,
     res: FastifyReply) => {
-    const campaign = await CampaignService.destroy(req.params as CampaignTypes.destroy)
+    const campaign = await CampaignService.destroy({id: Number(req.params.id)} as CampaignTypes.destroy)
 
     return res.status(StatusCode.OK).send(
       new PresenterFactory<{ message: string }>(

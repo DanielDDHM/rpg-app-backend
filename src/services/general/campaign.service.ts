@@ -1,4 +1,4 @@
-import { Campaigns } from "@prisma/client"
+import { Campaign } from "@prisma/client"
 import { prisma } from "../../config"
 import { StatusCode } from "../../constants"
 import { Exception } from "../../helpers"
@@ -8,7 +8,7 @@ import { UserService } from "./user.service"
 
 export namespace CampaignService {
   export const get = async (
-    params: CampaignTypes.get): Promise<{ campaign: Campaigns[], total: number }> => {
+    params: CampaignTypes.get): Promise<{ campaign: Campaign[], total: number }> => {
     try {
       const { id, user, page, perPage } = CampaignValidation.get.parse(params)
 
@@ -20,12 +20,12 @@ export namespace CampaignService {
       }
 
       const [campaign, total] = await prisma.$transaction([
-        prisma.campaigns.findMany({
+        prisma.campaign.findMany({
           where: (id || user) ? query : {},
           skip: (Number(page) - 1) * Number(perPage) || 0,
           take: Number(perPage) || 10,
         }),
-        prisma.campaigns.count({ where: (id || user) ? query : {}, })
+        prisma.campaign.count({ where: (id || user) ? query : {}, })
       ])
 
       if(!campaign || total === 0){
@@ -48,13 +48,13 @@ export namespace CampaignService {
     }
   }
   export const create = async (
-    params: CampaignTypes.create): Promise<Campaigns> => {
+    params: CampaignTypes.create): Promise<Campaign> => {
     try {
       const { name, usersId } = CampaignValidation.create.parse(params)
 
       await UserService.get({id: usersId})
 
-      const campaign = await prisma.campaigns.create({
+      const campaign = await prisma.campaign.create({
         data: {
           name,
           usersId
@@ -78,13 +78,13 @@ export namespace CampaignService {
   }
 
   export const update = async (
-    params: CampaignTypes.update): Promise<Campaigns> => {
+    params: CampaignTypes.update): Promise<Campaign> => {
     try {
       const { id, name } = CampaignValidation.update.parse(params)
 
       await CampaignService.get({id})
 
-      const campaign = await prisma.campaigns.update({
+      const campaign = await prisma.campaign.update({
         where: {
           id
         },
@@ -114,7 +114,7 @@ export namespace CampaignService {
 
       await CampaignService.get({id})
 
-      const campaign = await prisma.campaigns.delete({
+      const campaign = await prisma.campaign.delete({
         where: {
           id
         }

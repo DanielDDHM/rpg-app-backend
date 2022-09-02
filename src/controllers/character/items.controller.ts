@@ -13,7 +13,8 @@ export namespace ItemsController {
     req: FastifyRequest<{Querystring: ItemsType.get }>,
     res: FastifyReply) => {
 
-    const items = await ItemsService.get(req.query as ItemsType.get)
+      const {id} = req.query;
+    const items = await ItemsService.get({id: Number(id)} as ItemsType.get)
 
     return res.status(StatusCode.OK).send(
       new PresenterFactory<Character["items"]>(
@@ -27,7 +28,7 @@ export namespace ItemsController {
     req: FastifyRequest<{ Params: GenericTypes.id, Body: ItemsReqType.add }>,
     res: FastifyReply) => {
 
-    const items = await ItemsService.add({ char: req.params.id, ...req.body } as ItemsType.add)
+    const items = await ItemsService.add({ char: Number(req.params.id), ...req.body } as ItemsType.add)
     return res.status(StatusCode.OK).send(
       new PresenterFactory<Character["items"]>(
         items,
@@ -40,7 +41,7 @@ export namespace ItemsController {
     req: FastifyRequest<{ Params: GenericTypes.id, Body: ItemsReqType.edit }>,
     res: FastifyReply) => {
 
-    const items = await ItemsService.edit({ char: req.params.id, ...req.body } as ItemsType.edit)
+    const items = await ItemsService.edit({ char: Number(req.params.id), ...req.body } as ItemsType.edit)
     return res.status(StatusCode.OK).send(
       new PresenterFactory<Character["items"]>(
         items,
@@ -53,7 +54,7 @@ export namespace ItemsController {
     req: FastifyRequest<{ Params: GenericTypes.id, Querystring: ItemsReqType.remove }>,
     res: FastifyReply) => {
 
-    const items = await ItemsService.remove({ char: req.params.id, ...req.query } as ItemsType.remove)
+    const items = await ItemsService.remove({ char: Number(req.params.id), ...req.query } as ItemsType.remove)
     return res.status(StatusCode.OK).send(
       new PresenterFactory<Character["items"]>(
         items,

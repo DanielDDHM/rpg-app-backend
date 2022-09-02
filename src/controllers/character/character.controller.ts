@@ -16,7 +16,8 @@ export namespace CharacterController {
   export const get = async (
     req: FastifyRequest<{ Params: GenericTypes.id, Querystring: CharacterReqType.get }>,
     res: FastifyReply) => {
-    const char = await CharacterService.get(req.params as GenericTypes.get)
+      const {id} = req.params;
+    const char = await CharacterService.get({id: Number(id)} as GenericTypes.get)
 
     return res.status(StatusCode.OK).send(
       new PresenterFactory<{ characters: Character[], total: number }>(
@@ -41,7 +42,7 @@ export namespace CharacterController {
     req: FastifyRequest<{ Params: GenericTypes.id, Body: CharacterReqType.update }>,
     res: FastifyReply) => {
     const { params: { id }, body } = req
-    const char = await CharacterService.update({ id, ...body } as CharacterType.update)
+    const char = await CharacterService.update({ id: Number(id), ...body } as CharacterType.update)
 
     return res.status(StatusCode.OK).send(
       new PresenterFactory<Character>(
@@ -53,7 +54,8 @@ export namespace CharacterController {
   export const killOrRevive = async (
     req: FastifyRequest<{ Params: GenericTypes.id }>,
     res: FastifyReply) => {
-    const char = await CharacterService.killOrRevive(req.params as GenericTypes.id)
+    const {id} = req.params;
+    const char = await CharacterService.killOrRevive({id: Number(id)} as GenericTypes.id)
 
     return res.status(StatusCode.OK).send(
       new PresenterFactory<Character>(
@@ -65,7 +67,9 @@ export namespace CharacterController {
   export const destroy = async (
     req: FastifyRequest<{ Params: GenericTypes.id }>,
     res: FastifyReply) => {
-    const char = await CharacterService.destroy(req.params as GenericTypes.id)
+
+      const {id} = req.params;
+    const char = await CharacterService.destroy({id: Number(id)} as GenericTypes.id)
 
     return res.status(StatusCode.OK).send(
       new PresenterFactory<{ message: string }>(

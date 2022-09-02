@@ -2,14 +2,14 @@ import { z } from "zod";
 
 export namespace CharacterValidation {
   export const get = z.object({
-    id: z.string()
-      .min(2, { message: 'MIN_LENGHT_3' })
+    id: z.number()
+    .nonnegative({message: 'NON_NEGATIVE'})
       .optional(),
-    user: z.string()
-      .min(2, { message: 'NON_EMPTY' })
+    user: z.number()
+    .nonnegative({message: 'NON_NEGATIVE'})
       .optional(),
-    campaign: z.string()
-    .min(2, { message: 'NON_EMPTY' })
+    campaign: z.number()
+    .nonnegative({message: 'NON_NEGATIVE'})
     .optional(),
     page: z.number()
       .nonnegative()
@@ -22,11 +22,11 @@ export namespace CharacterValidation {
   export const create = z.object({
     name: z.string()
       .min(2, { message: 'MIN_LENGHT_3' })
-      .max(10, { message: 'MAX_LENGTH_10' }),
-    campaign: z.string()
-      .min(2, { message: 'MIN_LENGHT_3' }),
-    owner: z.string()
-      .min(2, { message: 'MIN_LENGHT_3' }),
+      .max(25, { message: 'MAX_LENGTH_25' }),
+    campaign: z.number()
+    .nonnegative({message: 'NON_NEGATIVE'}),
+    owner: z.number()
+    .nonnegative({message: 'NON_NEGATIVE'}),
 
     about: z.object({
       class: z.string()
@@ -77,14 +77,14 @@ export namespace CharacterValidation {
   }).strict();
 
   export const update = z.object({
-    id: z.string()
-      .min(2, { message: 'NON_EMPTY' }),
+    id: z.number()
+    .nonnegative({message: 'NON_NEGATIVE'}),
     name: z.string()
       .min(2, { message: 'NON_EMPTY' }),
-    campaign: z.string()
-      .min(2, { message: 'NON_EMPTY' }),
-    owner: z.string()
-      .min(2, { message: 'NON_EMPTY' }),
+    campaign: z.number()
+    .nonnegative({message: 'NON_NEGATIVE'}),
+    owner: z.number()
+    .nonnegative({message: 'NON_NEGATIVE'}),
 
     about: z.object({
       class: z.string()

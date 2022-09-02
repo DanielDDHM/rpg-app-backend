@@ -2,13 +2,13 @@ import { z } from "zod";
 
 export namespace GenericValidation {
   export const id = z.object({
-    id: z.string()
-      .min(2, { message: 'MIN_LENGHT_3' }),
+    id: z.number()
+    .nonnegative({message: 'NON_NEGATIVE'}),
   }).strict();
 
   export const get = z.object({
-    id: z.string()
-      .min(2, { message: 'MIN_LENGHT_3' })
+    id: z.number()
+    .nonnegative({message: 'NON_NEGATIVE'})
       .optional(),
     page: z.number()
       .nonnegative()
