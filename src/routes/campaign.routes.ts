@@ -1,10 +1,5 @@
-import {
-  FastifyInstance,
-  FastifyRegisterOptions
-} from 'fastify';
-import {
-  CampaignController
-} from '../controllers';
+import { FastifyInstance, FastifyRegisterOptions } from 'fastify';
+import { CampaignController } from '../controllers';
 
 const campaignRouter = (
   fastify: FastifyInstance,
@@ -15,7 +10,7 @@ const campaignRouter = (
     .get('/:id?', CampaignController.get)
     .post('/', CampaignController.create)
     .put('/:id', CampaignController.update)
-    .delete('/:id', CampaignController.destroy)
+    .delete('/:id', CampaignController.destroy);
 
   done();
 };

@@ -1,13 +1,8 @@
-import axios,
-{
-  AxiosRequestConfig,
-  AxiosResponse,
-  AxiosError
-} from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 export namespace ExternalRequest {
-  export type RequestConfig = AxiosRequestConfig
+  export type RequestConfig = AxiosRequestConfig;
 
-  export type Response<T = any> = AxiosResponse<T>
+  export type Response<T = any> = AxiosResponse<T>;
 
   export function get<T>(url: string, config: RequestConfig = {}): Promise<Response<T>> {
     return axios.get<T, Response<T>>(url, config);

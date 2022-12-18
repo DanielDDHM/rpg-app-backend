@@ -1,1 +1,1 @@
-export * from './check.middleware'
+export * from './check.middleware';

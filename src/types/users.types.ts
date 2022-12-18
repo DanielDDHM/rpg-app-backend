@@ -1,7 +1,5 @@
 import * as z from 'zod';
-import {
-  UsersValidation
-} from '../validations';
+import { UsersValidation } from '../validations';
 
 export namespace UserTypes {
   export type get = z.infer<typeof UsersValidation.get>;

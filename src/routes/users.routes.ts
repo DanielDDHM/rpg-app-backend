@@ -1,10 +1,5 @@
-import {
-  FastifyInstance,
-  FastifyRegisterOptions
-} from 'fastify';
-import {
-  UserController
-} from '../controllers';
+import { FastifyInstance, FastifyRegisterOptions } from 'fastify';
+import { UserController } from '../controllers';
 
 const userRouter = (
   fastify: FastifyInstance,
@@ -16,7 +11,7 @@ const userRouter = (
     .post('/', UserController.create)
     .put('/:id', UserController.update)
     .patch('/:id', UserController.activate)
-    .delete('/:id', UserController.destroy)
+    .delete('/:id', UserController.destroy);
 
   done();
 };

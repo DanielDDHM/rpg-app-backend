@@ -1,77 +1,60 @@
-import { Users } from "@prisma/client"
-import { UserTypes } from "../types"
-import { UsersValidation } from "../validations"
-import { prisma } from "../config"
-import { Exception } from "../helpers"
-import {
-  StatusCode
-} from "../constants"
-import { PasswordCrypt } from "../helpers/auth"
-import _ from "lodash"
+import { Users } from '@prisma/client';
+import { UserTypes } from '../types';
+import { UsersValidation } from '../validations';
+import { prisma } from '../config';
+import { Exception } from '../helpers';
+import { StatusCode } from '../constants';
+import { PasswordCrypt } from '../helpers/auth';
+import _ from 'lodash';
 
 export namespace UserService {
-  export const get = async (
-    params: UserTypes.get): Promise<{ user: Users[], total: number }> => {
+  export const get = async (params: UserTypes.get): Promise<{ user: Users[]; total: number }> => {
     try {
-     _.some(params, "id") === true ? params.id = Number(params.id) : null
-      const { id, email, page, perPage } = UsersValidation.get.parse(params)
+      _.some(params, 'id') === true ? (params.id = Number(params.id)) : null;
+      const { id, email, page, perPage } = UsersValidation.get.parse(params);
 
       const query = {
-        OR: [
-          { id },
-          { email }
-        ]
-      }
+        OR: [{ id }, { email }],
+      };
 
       const [user, total] = await prisma.$transaction([
         prisma.users.findMany({
-          where: (id || email) ? query : {},
+          where: id || email ? query : {},
           skip: (Number(page) - 1) * Number(perPage) || 0,
           take: Number(perPage) || 10,
           include: {
             campaigns: true,
-            character: true
-          }
+            character: true,
+          },
         }),
-        prisma.users.count({ where: (id || email) ? query : {}, })
-      ])
+        prisma.users.count({ where: id || email ? query : {} }),
+      ]);
 
-      if(!user || total === 0){
-        throw new Exception.AppError(StatusCode.BAD_REQUEST, ['USER NOT EXIST'])
+      if (!user || total === 0) {
+        throw new Exception.AppError(StatusCode.BAD_REQUEST, ['USER NOT EXIST']);
       }
 
-      return { user, total: total }
-
-
+      return { user, total: total };
     } catch (error: any) {
-      if(error instanceof Exception.AppError){
-        throw new Exception.AppError(
-          error?.statusCode,
-          error?.messages
-        )
+      if (error instanceof Exception.AppError) {
+        throw new Exception.AppError(error?.statusCode, error?.messages);
       }
 
-      throw new Exception.AppError(
-        StatusCode.INTERNAL_SERVER_ERROR,
-        [error])
+      throw new Exception.AppError(StatusCode.INTERNAL_SERVER_ERROR, [error]);
     }
-  }
-  export const create = async (
-    params: UserTypes.create): Promise<Users> => {
+  };
+  export const create = async (params: UserTypes.create): Promise<Users> => {
     try {
-      const { nick, name, email, phone, password } = UsersValidation.create.parse(params)
+      const { nick, name, email, phone, password } = UsersValidation.create.parse(params);
 
       const userExists = await prisma.users.findMany({
-        where:{
-          OR:[
-            {nick},
-            {email}
-          ]
-        }
-      })
+        where: {
+          OR: [{ nick }, { email }],
+        },
+      });
 
-      if(userExists && userExists.length > 0){
-        throw new Exception.AppError(StatusCode.BAD_REQUEST, ['USER EXIST'])
+      if (userExists && userExists.length > 0) {
+        throw new Exception.AppError(StatusCode.BAD_REQUEST, ['USER EXIST']);
       }
 
       const userCreated = await prisma.users.create({
@@ -80,125 +63,101 @@ export namespace UserService {
           name,
           email,
           phone,
-          password: await PasswordCrypt.crypt({pass: password, salt: 6})
-        }
-      })
+          password: await PasswordCrypt.crypt({ pass: password, salt: 6 }),
+        },
+      });
 
-      return userCreated
+      return userCreated;
     } catch (error: any) {
-      if(error instanceof Exception.AppError){
-        throw new Exception.AppError(
-          error?.statusCode,
-          error?.messages
-        )
+      if (error instanceof Exception.AppError) {
+        throw new Exception.AppError(error?.statusCode, error?.messages);
       }
 
-      throw new Exception.AppError(
-        StatusCode.INTERNAL_SERVER_ERROR,
-        [error])
+      throw new Exception.AppError(StatusCode.INTERNAL_SERVER_ERROR, [error]);
     }
-  }
-  export const update = async (
-    params: UserTypes.update): Promise<Users> => {
+  };
+  export const update = async (params: UserTypes.update): Promise<Users> => {
     try {
-      const { id, name, email, phone, password } = UsersValidation.update.parse(params)
+      const { id, name, email, phone, password } = UsersValidation.update.parse(params);
 
-      await UserService.get({id})
+      await UserService.get({ id });
 
       const userUpdated = await prisma.users.update({
         where: {
-          id
+          id,
         },
         data: {
           name,
           email,
           phone,
-          password: await PasswordCrypt.crypt({pass: password, salt: 6})
-        }
-      })
+          password: await PasswordCrypt.crypt({ pass: password, salt: 6 }),
+        },
+      });
 
-      return userUpdated
+      return userUpdated;
     } catch (error: any) {
-      if(error instanceof Exception.AppError){
-        throw new Exception.AppError(
-          error?.statusCode,
-          error?.messages
-        )
+      if (error instanceof Exception.AppError) {
+        throw new Exception.AppError(error?.statusCode, error?.messages);
       }
 
-      throw new Exception.AppError(
-        StatusCode.INTERNAL_SERVER_ERROR,
-        [error])
+      throw new Exception.AppError(StatusCode.INTERNAL_SERVER_ERROR, [error]);
     }
-  }
-  export const activate = async (
-    params: UserTypes.active): Promise<Users> => {
+  };
+  export const activate = async (params: UserTypes.active): Promise<Users> => {
     try {
-      const { id } = UsersValidation.activate.parse(params)
+      const { id } = UsersValidation.activate.parse(params);
 
-      const {user} = await UserService.get({id})
+      const { user } = await UserService.get({ id });
 
       let act;
       switch (user[0]?.isActive) {
         case true:
-          act = false
+          act = false;
           break;
         case false:
-          act = true
+          act = true;
           break;
       }
 
       const updatedUser = await prisma.users.update({
         where: { id },
         data: {
-          isActive: act
-        }
-      })
+          isActive: act,
+        },
+      });
 
-      return updatedUser
+      return updatedUser;
     } catch (error: any) {
-      if(error instanceof Exception.AppError){
-        throw new Exception.AppError(
-          error?.statusCode,
-          error?.messages
-        )
+      if (error instanceof Exception.AppError) {
+        throw new Exception.AppError(error?.statusCode, error?.messages);
       }
 
-      throw new Exception.AppError(
-        StatusCode.INTERNAL_SERVER_ERROR,
-        [error])
+      throw new Exception.AppError(StatusCode.INTERNAL_SERVER_ERROR, [error]);
     }
-  }
-  export const destroy = async (
-    params: UserTypes.destroy): Promise<{ message: string }> => {
+  };
+  export const destroy = async (params: UserTypes.destroy): Promise<{ message: string }> => {
     try {
-      const { id, email, password } = UsersValidation.destroy.parse(params)
+      const { id, email, password } = UsersValidation.destroy.parse(params);
 
-      const {user} = await UserService.get({id})
+      const { user } = await UserService.get({ id });
 
-      const passMatch = await PasswordCrypt.compare({pass: password!, userP: user[0].password});
+      const passMatch = await PasswordCrypt.compare({ pass: password!, userP: user[0].password });
 
-        if(user[0].email !== email || !passMatch){
-          throw new Exception.AppError(StatusCode.BAD_REQUEST, ['DATA IS INCORRECT'])
-        }
-
+      if (user[0].email !== email || !passMatch) {
+        throw new Exception.AppError(StatusCode.BAD_REQUEST, ['DATA IS INCORRECT']);
+      }
 
       await prisma.users.delete({
-        where: { id }
-      })
+        where: { id },
+      });
 
-      return { message: `User ${id} has Deleted` }
+      return { message: `User ${id} has Deleted` };
     } catch (error: any) {
-      if(error instanceof Exception.AppError){
-        throw new Exception.AppError(
-          error?.statusCode,
-          error?.messages
-        )
+      if (error instanceof Exception.AppError) {
+        throw new Exception.AppError(error?.statusCode, error?.messages);
       }
 
-      throw new Exception.AppError(
-        StatusCode.INTERNAL_SERVER_ERROR,
-        [error])
+      throw new Exception.AppError(StatusCode.INTERNAL_SERVER_ERROR, [error]);
     }
-  }
+  };
 }

@@ -1,2 +1,2 @@
-export { default as prisma } from './prisma'
-export * from './axios'
+export { default as prisma } from './prisma';
+export * from './axios';

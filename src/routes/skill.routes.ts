@@ -1,10 +1,5 @@
-import {
-  FastifyInstance,
-  FastifyRegisterOptions
-} from 'fastify';
-import {
-  SkillsController,
-} from '../controllers';
+import { FastifyInstance, FastifyRegisterOptions } from 'fastify';
+import { SkillsController } from '../controllers';
 
 const skillRouter = (
   fastify: FastifyInstance,
@@ -15,7 +10,7 @@ const skillRouter = (
     .get('/:id', SkillsController.get)
     .post('/', SkillsController.add)
     .put('/edit', SkillsController.edit)
-    .delete('/:id', SkillsController.remove)
+    .delete('/:id', SkillsController.remove);
 
   done();
 };

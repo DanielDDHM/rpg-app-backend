@@ -1,23 +1,18 @@
-import {
-  FastifyInstance,
-  FastifyRegisterOptions
-} from 'fastify';
-import {
-  ItemsController,
-} from '../controllers';
+import { FastifyInstance, FastifyRegisterOptions } from 'fastify';
+import { ItemsController } from '../controllers';
 
 const itemRouter = (
   fastify: FastifyInstance,
   _opts: FastifyRegisterOptions<any>,
   done: Function,
 ) => {
-  fastify
+  fastify;
 
   fastify
     .get('/:id', ItemsController.get)
     .post('/', ItemsController.add)
     .put('/edit', ItemsController.edit)
-    .delete('/:id', ItemsController.remove)
+    .delete('/:id', ItemsController.remove);
 
   done();
 };

@@ -1,1 +1,1 @@
-export * from './presenter.factory'
+export * from './presenter.factory';

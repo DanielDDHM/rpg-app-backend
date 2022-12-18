@@ -1,132 +1,94 @@
-import { Character } from "@prisma/client"
-import { Exception } from "../helpers"
-import { prisma } from "../config"
-import {
-  
-  StatusCode
-} from "../constants"
-import {
-  CharacterType,
-  GenericTypes
-} from "../types"
-import {
-  CharacterValidation,
-  GenericValidation
-} from "../validations"
-import { CampaignService } from "./campaign.service"
-import { UserService } from "./user.service"
+import { Character } from '@prisma/client';
+import { Exception } from '../helpers';
+import { prisma } from '../config';
+import { StatusCode } from '../constants';
+import { CharacterType, GenericTypes } from '../types';
+import { CharacterValidation, GenericValidation } from '../validations';
+import { CampaignService } from './campaign.service';
+import { UserService } from './user.service';
 
 export namespace CharacterService {
   export const get = async (
-    params: CharacterType.get): Promise<{ characters: Character[], total: number }> => {
+    params: CharacterType.get,
+  ): Promise<{ characters: Character[]; total: number }> => {
     try {
-      const { id, user, campaign, page, perPage } = CharacterValidation.get.parse(params)
+      const { id, user, campaign, page, perPage } = CharacterValidation.get.parse(params);
 
       const query = {
-        OR: [
-          { id },
-          { userId: user },
-          {campaignsId: campaign}
-        ]
-      }
+        OR: [{ id }, { userId: user }, { campaignsId: campaign }],
+      };
 
-      const [char, total] = await prisma.$transaction([
+      const [characters, total] = await prisma.$transaction([
         prisma.character.findMany({
-          where: (id || user) ? query : {},
+          where: id || user ? query : {},
           skip: (Number(page) - 1) * Number(perPage) || 0,
           take: Number(perPage) || 10,
+          include: {
+            items: true,
+            magics: true,
+            owner: true,
+            campaign: true,
+          },
         }),
-        prisma.character.count({ where: (id || user) ? query : {}, })
-      ])
+        prisma.character.count({ where: id || user ? query : {} }),
+      ]);
 
-      if(!char || total === 0){
-        throw new Exception.AppError(StatusCode.BAD_REQUEST, ['CHAR NOT EXIST'])
+      if (!characters.length) {
+        throw new Exception.AppError(StatusCode.BAD_REQUEST, ['CHAR NOT EXIST']);
       }
 
-      return { characters: char, total: total }
-
+      return { characters, total: total };
     } catch (error: any) {
-      if(error instanceof Exception.AppError){
-        throw new Exception.AppError(
-          error?.statusCode,
-          error?.messages
-        )
+      if (error instanceof Exception.AppError) {
+        throw new Exception.AppError(error?.statusCode, error?.messages);
       }
 
-      throw new Exception.AppError(
-        StatusCode.INTERNAL_SERVER_ERROR,
-        [error])
+      throw new Exception.AppError(StatusCode.INTERNAL_SERVER_ERROR, [error]);
     }
-  }
-  export const create = async (
-    params: CharacterType.create): Promise<Character> => {
+  };
+  export const create = async (params: CharacterType.create): Promise<Character> => {
     try {
-      const {
-        campaign,
-        name,
-        owner,
-        about,
-        atributes,
-        slots,
-        status
-      } = CharacterValidation.create.parse(params)
+      const { campaign, name, owner, about, atributes, slots, status } =
+        CharacterValidation.create.parse(params);
 
-      await Promise.all([
-        CampaignService.get({id: campaign}),
-        UserService.get({id: owner})
-      ])
+      await Promise.all([CampaignService.get({ id: campaign }), UserService.get({ id: owner })]);
 
       const char = await prisma.character.create({
         data: {
           campaignsId: campaign,
-          name,
           usersId: owner,
+          name,
           about,
           atributes,
           slots,
-          status
-        }
-      })
+          status,
+        },
+      });
 
-      return char
-
+      return char;
     } catch (error: any) {
-      if(error instanceof Exception.AppError){
-        throw new Exception.AppError(
-          error?.statusCode,
-          error?.messages
-        )
+      if (error instanceof Exception.AppError) {
+        throw new Exception.AppError(error?.statusCode, error?.messages);
       }
 
-      throw new Exception.AppError(
-        StatusCode.INTERNAL_SERVER_ERROR,
-        [error])
+      throw new Exception.AppError(StatusCode.INTERNAL_SERVER_ERROR, [error]);
     }
-  }
+  };
 
-  export const update = async (
-    params: CharacterType.update): Promise<Character> => {
+  export const update = async (params: CharacterType.update): Promise<Character> => {
     try {
-      const {
-        id,
-        campaign,
-        name,
-        owner,
-        about,
-        atributes,
-        slots,
-        status
-      } = CharacterValidation.update.parse(params)
+      const { id, campaign, name, owner, about, atributes, slots, status } =
+        CharacterValidation.update.parse(params);
 
       await Promise.all([
-        get({id}),
-        CampaignService.get({id: campaign}),
-        UserService.get({id: owner})
-      ])
+        get({ id }),
+        CampaignService.get({ id: campaign }),
+        UserService.get({ id: owner }),
+      ]);
 
       const char = await prisma.character.update({
         where: {
-          id
+          id,
         },
         data: {
           campaignsId: campaign,
@@ -135,88 +97,69 @@ export namespace CharacterService {
           usersId: owner,
           atributes,
           slots,
-          status
-        }
-      })
+          status,
+        },
+      });
 
-      return char
+      return char;
     } catch (error: any) {
-      if(error instanceof Exception.AppError){
-        throw new Exception.AppError(
-          error?.statusCode,
-          error?.messages
-        )
+      if (error instanceof Exception.AppError) {
+        throw new Exception.AppError(error?.statusCode, error?.messages);
       }
 
-      throw new Exception.AppError(
-        StatusCode.INTERNAL_SERVER_ERROR,
-        [error])
+      throw new Exception.AppError(StatusCode.INTERNAL_SERVER_ERROR, [error]);
     }
-  }
+  };
 
-
-  export const killOrRevive = async (
-    params: GenericTypes.get) => {
+  export const killOrRevive = async (params: GenericTypes.get) => {
     try {
-      const { id } = GenericValidation.id.parse(params)
+      const { id } = GenericValidation.id.parse(params);
 
-      const {characters} = await get({id})
+      const { characters } = await get({ id });
 
       let act;
       switch (characters[0].isAlive) {
         case true:
-          act = false
+          act = false;
           break;
         case false:
-          act = true
+          act = true;
           break;
       }
 
       const char = await prisma.character.update({
         where: { id },
         data: {
-          isAlive: act
-        }
-      })
+          isAlive: act,
+        },
+      });
 
-      return char
+      return char;
     } catch (error: any) {
-      if(error instanceof Exception.AppError){
-        throw new Exception.AppError(
-          error?.statusCode,
-          error?.messages
-        )
+      if (error instanceof Exception.AppError) {
+        throw new Exception.AppError(error?.statusCode, error?.messages);
       }
 
-      throw new Exception.AppError(
-        StatusCode.INTERNAL_SERVER_ERROR,
-        [error])
+      throw new Exception.AppError(StatusCode.INTERNAL_SERVER_ERROR, [error]);
     }
-  }
-  export const destroy = async (
-    params: CharacterType.destroy): Promise<{ message: string }> => {
+  };
+  export const destroy = async (params: CharacterType.destroy): Promise<{ message: string }> => {
     try {
-      const { id } = GenericValidation.id.parse(params)
+      const { id } = GenericValidation.id.parse(params);
 
-      await get({id})
+      await get({ id });
 
       const char = await prisma.character.delete({
-        where: { id }
-      })
+        where: { id },
+      });
 
-
-      return { message: `user ${char.id} has been deleted` }
+      return { message: `user ${char.id} has been deleted` };
     } catch (error: any) {
-      if(error instanceof Exception.AppError){
-        throw new Exception.AppError(
-          error?.statusCode,
-          error?.messages
-        )
+      if (error instanceof Exception.AppError) {
+        throw new Exception.AppError(error?.statusCode, error?.messages);
       }
 
-      throw new Exception.AppError(
-        StatusCode.INTERNAL_SERVER_ERROR,
-        [error])
+      throw new Exception.AppError(StatusCode.INTERNAL_SERVER_ERROR, [error]);
     }
-  }
+  };
 }

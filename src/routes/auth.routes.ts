@@ -1,7 +1,4 @@
-import {
-  FastifyInstance,
-  FastifyRegisterOptions
-} from 'fastify';
+import { FastifyInstance, FastifyRegisterOptions } from 'fastify';
 import { AuthController } from '../controllers';
 
 const authRouter = (
@@ -9,9 +6,7 @@ const authRouter = (
   _opts: FastifyRegisterOptions<any>,
   done: Function,
 ) => {
-  fastify
-    .post('/login', AuthController.login)
-    .post('/logout', AuthController.logout)
+  fastify.post('/login', AuthController.login).post('/logout', AuthController.logout);
   done();
 };
 

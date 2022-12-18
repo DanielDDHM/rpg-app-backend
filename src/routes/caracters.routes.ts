@@ -1,10 +1,5 @@
-import {
-  FastifyInstance,
-  FastifyRegisterOptions
-} from 'fastify';
-import {
-  CharacterController,
-} from '../controllers';
+import { FastifyInstance, FastifyRegisterOptions } from 'fastify';
+import { CharacterController } from '../controllers';
 
 const caractersRouter = (
   fastify: FastifyInstance,
@@ -16,7 +11,7 @@ const caractersRouter = (
     .post('/', CharacterController.create)
     .put('/:id', CharacterController.update)
     .patch('/:id', CharacterController.killOrRevive)
-    .delete('/:id', CharacterController.destroy)
+    .delete('/:id', CharacterController.destroy);
   done();
 };
 
