@@ -8,13 +8,12 @@ import {
 } from "fastify"
 import {
   CharacterType,
-  CharacterReqType,
   GenericTypes
 } from "../types"
 
 export namespace CharacterController {
   export const get = async (
-    req: FastifyRequest<{ Params: GenericTypes.id, Querystring: CharacterReqType.get }>,
+    req: FastifyRequest<{ Params: GenericTypes.id, Querystring: Omit<CharacterType.get, "id"> }>,
     res: FastifyReply) => {
       const {id} = req.params;
     const char = await CharacterService.get({id: Number(id)} as GenericTypes.get)
@@ -39,7 +38,7 @@ export namespace CharacterController {
     )
   }
   export const update = async (
-    req: FastifyRequest<{ Params: GenericTypes.id, Body: CharacterReqType.update }>,
+    req: FastifyRequest<{ Params: GenericTypes.id, Body: Omit<CharacterType.update, "id"> }>,
     res: FastifyReply) => {
     const { params: { id }, body } = req
     const char = await CharacterService.update({ id: Number(id), ...body } as CharacterType.update)

@@ -1,7 +1,6 @@
 import { StatusCode } from "../constants";
 import { PresenterFactory } from "../factories";
 import { Users } from "@prisma/client";
-import _, { omit } from "lodash";
 import { UserService } from "../services";
 import {
   FastifyReply,
@@ -9,7 +8,6 @@ import {
 } from "fastify";
 import {
   GenericTypes,
-  UserReqType,
   UserTypes
 } from "../types";
 
@@ -17,7 +15,6 @@ export namespace UserController {
   export const get = async (
     req: FastifyRequest<{ Querystring: UserTypes.get }>,
     res: FastifyReply) => {
-
     const user = await UserService.get(req.query)
 
     return res.status(StatusCode.OK).send(
@@ -40,7 +37,7 @@ export namespace UserController {
     )
   }
   export const update = async (
-    req: FastifyRequest<{ Params: GenericTypes.id, Body: UserReqType.update }>,
+    req: FastifyRequest<{ Params: GenericTypes.id, Body: Omit<UserTypes.update, "id"> }>,
     res: FastifyReply) => {
     const { params: { id }, body } = req
     const userUpdated = await UserService.update({ id: Number(id), ...body } as UserTypes.update)
@@ -66,10 +63,10 @@ export namespace UserController {
     )
   }
   export const destroy = async (
-    req: FastifyRequest<{ Params: GenericTypes.id, Querystring: UserReqType.destroy }>,
+    req: FastifyRequest<{ Params: GenericTypes.id}>,
     res: FastifyReply) => {
-    const { params: { id }, query } = req
-    const userDeleted = await UserService.destroy({ id: Number(id), ...query } as UserTypes.destroy)
+    const { params: { id } } = req
+    const userDeleted = await UserService.destroy({ id: Number(id) } as UserTypes.destroy)
 
     return res.status(StatusCode.OK).send(
       new PresenterFactory<{ message: string }>(

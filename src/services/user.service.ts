@@ -29,16 +29,8 @@ export namespace UserService {
           skip: (Number(page) - 1) * Number(perPage) || 0,
           take: Number(perPage) || 10,
           include: {
-            campaigns: {
-              select: {
-                id: true
-              }
-            },
-            character: {
-              select: {
-                id: true
-              }
-            }
+            campaigns: true,
+            character: true
           }
         }),
         prisma.users.count({ where: (id || email) ? query : {}, })

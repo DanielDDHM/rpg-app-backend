@@ -11,9 +11,9 @@ datasource db {
 model Campaign {
   id        Int         @id @unique @default(autoincrement())
   name      String
-  usersId   Int         @unique
+  ownerId  Int         @unique
   character Character[]
-  master    Users       @relation(fields: [usersId], references: [id])
+  owner    Users       @relation(fields: [ownerId], references: [id])
   createdAt DateTime    @default(now())
   updatedAt DateTime?   @default(now())
 }
@@ -39,8 +39,9 @@ model Character {
   slots       Json?
   atributes   Json?
   status      Json?
-  magics      magic[]
-  items       item[]
+  isNpc       Boolean?  @default(false)
+  magics      Magic[]
+  items       Item[]
   usersId     Int       @unique
   campaignsId Int       @unique
   owner       Users     @relation(fields: [usersId], references: [id])
@@ -50,9 +51,8 @@ model Character {
   updatedAt   DateTime? @default(now())
 }
 
-model magic {
-  id Int @id @unique @default(autoincrement())
-
+model Magic {
+  id          Int       @id @unique @default(autoincrement())
   damage      Int
   name        String
   castingtime Int
@@ -64,10 +64,15 @@ model magic {
   char        Character @relation(fields: [charId], references: [id])
 }
 
-model item {
-  id Int @id @unique @default(autoincrement())
-  charId    Int       @unique
-  char      Character @relation(fields: [charId], references: [id])
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now())
+model Item {
+  id         Int       @id @unique @default(autoincrement())
+  damage     Int
+  name       String
+  properties Json?
+  value      Int
+  weight     Int
+  charId     Int       @unique
+  char       Character @relation(fields: [charId], references: [id])
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime? @default(now())
 }

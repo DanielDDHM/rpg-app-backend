@@ -10,8 +10,3 @@ export namespace CampaignTypes {
   export type update = z.infer<typeof CampaignValidation.update>
   export type destroy = z.infer<typeof GenericValidation.id>
 }
-
-
-export namespace CampaignReqType {
-  export type update = Omit<CampaignTypes.update, 'id'>
-}

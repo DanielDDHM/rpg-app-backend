@@ -7,10 +7,10 @@ import {
   SkillsReqType,
   SkillsType
 } from "../types"
-import { Character } from "@prisma/client"
 import { StatusCode } from "../constants"
 import { PresenterFactory } from "../factories"
 import { SkillsService } from "../services"
+import { magic } from "@prisma/client"
 
 
 export namespace SkillsController {
@@ -21,7 +21,7 @@ export namespace SkillsController {
     const skills = await SkillsService.get(req.query as SkillsType.get)
 
     return res.status(StatusCode.OK).send(
-      new PresenterFactory<Character["magics"]>(
+      new PresenterFactory<magic>(
         skills,
         ['SUCCESS'],
       )
@@ -34,7 +34,7 @@ export namespace SkillsController {
 
     const skills = await SkillsService.add({ char: Number(req.params.id), ...req.body } as SkillsType.add)
     return res.status(StatusCode.OK).send(
-      new PresenterFactory<Character["magics"]>(
+      new PresenterFactory<magic>(
         skills,
         ['SUCCESS'],
       )
@@ -47,7 +47,7 @@ export namespace SkillsController {
 
     const skills = await SkillsService.edit({ char: Number(req.params.id), ...req.body } as SkillsType.edit)
     return res.status(StatusCode.OK).send(
-      new PresenterFactory<Character["magics"]>(
+      new PresenterFactory<magic>(
         skills,
         ['SUCCESS'],
       )
@@ -60,7 +60,7 @@ export namespace SkillsController {
 
     const skills = await SkillsService.remove({ char: Number(req.params.id), ...req.query } as SkillsType.remove)
     return res.status(StatusCode.OK).send(
-      new PresenterFactory<Character["magics"]>(
+      new PresenterFactory<magic>(
         skills,
         ['SUCCESS'],
       )

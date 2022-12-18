@@ -4,7 +4,7 @@ export namespace CampaignValidation {
   export const get = z.object({
     id: z.number()
     .nonnegative({message: 'NON_NEGATIVE'})
-      .optional(),
+    .optional(),
     user: z.string()
       .min(2, { message: 'MIN_LENGHT_3' })
       .optional(),
@@ -19,7 +19,7 @@ export namespace CampaignValidation {
     name: z.string()
       .min(2, { message: 'MIN_LENGHT_3' })
       .max(25, { message: 'MAX_LENGTH_25' }),
-    usersId: z.number()
+    ownerId: z.number()
     .nonnegative({message: 'NON_NEGATIVE'})
   }).strict();
 

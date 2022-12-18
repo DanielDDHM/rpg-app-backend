@@ -10,8 +10,3 @@ export namespace UserTypes {
   export type destroy = z.infer<typeof UsersValidation.destroy>;
   export type active = z.infer<typeof UsersValidation.activate>;
 }
-
-export namespace UserReqType {
-  export type update = Omit<UserTypes.update, 'id'>;
-  export type destroy = Omit<UserTypes.destroy, 'id'>;
-}

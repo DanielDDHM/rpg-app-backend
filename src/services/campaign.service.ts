@@ -10,6 +10,7 @@ export namespace CampaignService {
   export const get = async (
     params: CampaignTypes.get): Promise<{ campaign: Campaign[], total: number }> => {
     try {
+      params.id ? params.id = Number(params.id) : null
       const { id, user, page, perPage } = CampaignValidation.get.parse(params)
 
       const query = {
@@ -24,6 +25,10 @@ export namespace CampaignService {
           where: (id || user) ? query : {},
           skip: (Number(page) - 1) * Number(perPage) || 0,
           take: Number(perPage) || 10,
+          include: {
+            owner: true,
+            character: true
+          }
         }),
         prisma.campaign.count({ where: (id || user) ? query : {}, })
       ])
@@ -50,14 +55,14 @@ export namespace CampaignService {
   export const create = async (
     params: CampaignTypes.create): Promise<Campaign> => {
     try {
-      const { name, usersId } = CampaignValidation.create.parse(params)
+      const { name, ownerId } = CampaignValidation.create.parse(params)
 
-      await UserService.get({id: usersId})
+      await UserService.get({id: ownerId})
 
       const campaign = await prisma.campaign.create({
         data: {
           name,
-          usersId
+          ownerId
         }
       })
 

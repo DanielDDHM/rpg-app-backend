@@ -1,4 +1,3 @@
-import { Campaign } from "@prisma/client"
 import { StatusCode } from "../constants"
 import { PresenterFactory } from "../factories"
 import { CampaignService } from "../services"
@@ -7,16 +6,16 @@ import {
   FastifyRequest
 } from "fastify"
 import {
-  CampaignReqType,
   CampaignTypes,
   GenericTypes
 } from "../types"
+import { Campaign } from "@prisma/client"
 
 export namespace CampaignController {
   export const get = async (
     req: FastifyRequest<{ Querystring: GenericTypes.get }>,
     res: FastifyReply) => {
-    const campaign = await CampaignService.get({id: Number(req.query.id), ...req.query} as GenericTypes.get)
+    const campaign = await CampaignService.get({...req.query})
 
     return res.status(StatusCode.OK).send(
       new PresenterFactory<{ campaign: Campaign[], total: number }>(
@@ -39,7 +38,7 @@ export namespace CampaignController {
     )
   }
   export const update = async (
-    req: FastifyRequest<{ Params: GenericTypes.id, Body: CampaignReqType.update }>,
+    req: FastifyRequest<{ Params: GenericTypes.id, Body: Omit<CampaignTypes.get, "id"> }>,
     res: FastifyReply) => {
     const { params: { id }, body } = req
     const campaign = await CampaignService.update({ id: Number(id), ...body } as CampaignTypes.update)

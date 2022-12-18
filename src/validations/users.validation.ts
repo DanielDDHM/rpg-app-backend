@@ -19,10 +19,10 @@ export namespace UsersValidation {
   export const create = z.object({
     nick: z.string()
       .min(2, { message: 'MIN_LENGHT_3' })
-      .max(10, { message: 'MAX_LENGTH_10' }),
+      .max(20, { message: 'MAX_LENGTH_20' }),
     name: z.string()
       .min(2, { message: 'MIN_LENGHT_3' })
-      .max(10, { message: 'MAX_LENGTH_10' }),
+      .max(100, { message: 'MAX_LENGTH_100' }),
     email: z.string()
       .min(2, { message: 'NON_EMPTY' }),
     password: z.string()

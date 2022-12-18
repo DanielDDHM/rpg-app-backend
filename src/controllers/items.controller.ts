@@ -1,4 +1,4 @@
-import { Character } from "@prisma/client"
+import { item } from "@prisma/client"
 import {
   FastifyReply,
   FastifyRequest
@@ -13,11 +13,11 @@ export namespace ItemsController {
     req: FastifyRequest<{Querystring: ItemsType.get }>,
     res: FastifyReply) => {
 
-      const {id} = req.query;
+    const {id} = req.query;
     const items = await ItemsService.get({id: Number(id)} as ItemsType.get)
 
     return res.status(StatusCode.OK).send(
-      new PresenterFactory<Character["items"]>(
+      new PresenterFactory<item>(
         items,
         ['SUCCESS'],
       )
@@ -30,7 +30,7 @@ export namespace ItemsController {
 
     const items = await ItemsService.add({ char: Number(req.params.id), ...req.body } as ItemsType.add)
     return res.status(StatusCode.OK).send(
-      new PresenterFactory<Character["items"]>(
+      new PresenterFactory<item>(
         items,
         ['SUCCESS'],
       )
@@ -43,7 +43,7 @@ export namespace ItemsController {
 
     const items = await ItemsService.edit({ char: Number(req.params.id), ...req.body } as ItemsType.edit)
     return res.status(StatusCode.OK).send(
-      new PresenterFactory<Character["items"]>(
+      new PresenterFactory<item>(
         items,
         ['SUCCESS'],
       )
@@ -56,7 +56,7 @@ export namespace ItemsController {
 
     const items = await ItemsService.remove({ char: Number(req.params.id), ...req.query } as ItemsType.remove)
     return res.status(StatusCode.OK).send(
-      new PresenterFactory<Character["items"]>(
+      new PresenterFactory<item>(
         items,
         ['SUCCESS'],
       )
