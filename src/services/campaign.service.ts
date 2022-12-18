@@ -1,9 +1,9 @@
 import { Campaign } from "@prisma/client"
-import { prisma } from "../../config"
-import { StatusCode } from "../../constants"
-import { Exception } from "../../helpers"
-import { CampaignTypes } from "../../types"
-import { CampaignValidation, GenericValidation } from "../../validations"
+import { prisma } from "../config"
+import { StatusCode } from "../constants"
+import { Exception } from "../helpers"
+import { CampaignTypes } from "../types"
+import { CampaignValidation, GenericValidation } from "../validations"
 import { UserService } from "./user.service"
 
 export namespace CampaignService {

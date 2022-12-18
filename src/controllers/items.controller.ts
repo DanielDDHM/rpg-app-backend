@@ -3,10 +3,10 @@ import {
   FastifyReply,
   FastifyRequest
 } from "fastify"
-import { StatusCode } from "../../constants"
-import { PresenterFactory } from "../../factories"
-import { ItemsService } from "../../services"
-import { GenericTypes, ItemsReqType, ItemsType } from "../../types"
+import { StatusCode } from "../constants"
+import { PresenterFactory } from "../factories"
+import { ItemsService } from "../services"
+import { GenericTypes, ItemsReqType, ItemsType } from "../types"
 
 export namespace ItemsController {
   export const get = async (

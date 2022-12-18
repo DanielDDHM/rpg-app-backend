@@ -1,7 +1,7 @@
 import { Campaign } from "@prisma/client"
-import { StatusCode } from "../../constants"
-import { PresenterFactory } from "../../factories"
-import { CampaignService } from "../../services"
+import { StatusCode } from "../constants"
+import { PresenterFactory } from "../factories"
+import { CampaignService } from "../services"
 import {
   FastifyReply,
   FastifyRequest
@@ -10,7 +10,7 @@ import {
   CampaignReqType,
   CampaignTypes,
   GenericTypes
-} from "../../types"
+} from "../types"
 
 export namespace CampaignController {
   export const get = async (

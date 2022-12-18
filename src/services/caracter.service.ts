@@ -1,19 +1,20 @@
 import { Character } from "@prisma/client"
-import { Exception } from "../../helpers"
-import { prisma } from "../../config"
+import { Exception } from "../helpers"
+import { prisma } from "../config"
 import {
   
   StatusCode
-} from "../../constants"
+} from "../constants"
 import {
   CharacterType,
   GenericTypes
-} from "../../types"
+} from "../types"
 import {
   CharacterValidation,
   GenericValidation
-} from "../../validations"
-import { CampaignService, UserService } from "../general"
+} from "../validations"
+import { CampaignService } from "./campaign.service"
+import { UserService } from "./user.service"
 
 export namespace CharacterService {
   export const get = async (

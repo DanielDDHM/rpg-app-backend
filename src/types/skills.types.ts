@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { SkillsValidation } from "../../validations"
+import { SkillsValidation } from "../validations"
 
 export namespace SkillsType {
   export type get = z.infer<typeof SkillsValidation.get>

@@ -1,12 +1,12 @@
 import { Users } from "@prisma/client"
-import { UserTypes } from "../../types"
-import { UsersValidation } from "../../validations"
-import { prisma } from "../../config"
-import { Exception } from "../../helpers"
+import { UserTypes } from "../types"
+import { UsersValidation } from "../validations"
+import { prisma } from "../config"
+import { Exception } from "../helpers"
 import {
   StatusCode
-} from "../../constants"
-import { PasswordCrypt } from "../../helpers/auth"
+} from "../constants"
+import { PasswordCrypt } from "../helpers/auth"
 import _ from "lodash"
 
 export namespace UserService {

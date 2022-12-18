@@ -1,7 +1,7 @@
 import { Character } from "@prisma/client"
-import { StatusCode } from "../../constants"
-import { PresenterFactory } from "../../factories"
-import { CharacterService } from "../../services"
+import { StatusCode } from "../constants"
+import { PresenterFactory } from "../factories"
+import { CharacterService } from "../services"
 import {
   FastifyReply,
   FastifyRequest
@@ -10,7 +10,7 @@ import {
   CharacterType,
   CharacterReqType,
   GenericTypes
-} from "../../types"
+} from "../types"
 
 export namespace CharacterController {
   export const get = async (

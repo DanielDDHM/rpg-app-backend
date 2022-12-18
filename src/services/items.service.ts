@@ -1,11 +1,11 @@
 import {
   
   StatusCode
-} from "../../constants"
-import { Exception } from "../../helpers"
-import { ItemsType } from "../../types"
-import { ItemsValidation } from "../../validations"
-import { prisma } from "../../config"
+} from "../constants"
+import { Exception } from "../helpers"
+import { ItemsType } from "../types"
+import { ItemsValidation } from "../validations"
+import { prisma } from "../config"
 import { Character } from "@prisma/client"
 import { v4 as uuid } from "uuid"
 import { CharacterService } from "./caracter.service"
