@@ -3,7 +3,6 @@ import {
   FastifyRegisterOptions
 } from 'fastify';
 import {
-  CampaignController,
   UserController
 } from '../controllers';
 
@@ -22,18 +21,4 @@ const userRouter = (
   done();
 };
 
-const campaignRouter = (
-  fastify: FastifyInstance,
-  _opts: FastifyRegisterOptions<any>,
-  done: Function,
-) => {
-  fastify
-    .get('/:id?', CampaignController.get)
-    .post('/', CampaignController.create)
-    .put('/:id', CampaignController.update)
-    .delete('/:id', CampaignController.destroy)
-
-  done();
-};
-
-export { userRouter, campaignRouter };
+export { userRouter };
