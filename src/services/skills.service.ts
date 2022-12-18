@@ -1,25 +1,21 @@
-import { Character } from '@prisma/client';
+import { Magic } from '@prisma/client';
 import { prisma } from '../config';
-import { StatusCode } from '../constants';
+import { Messages, StatusCode } from '../constants';
 import { Exception } from '../helpers';
 import { SkillsType } from '../types';
 import { SkillsValidation } from '../validations';
-import { v4 as uuid } from 'uuid';
-import { CharacterService } from './caracter.service';
 
 export namespace SkillsService {
-  export const get = async (params: SkillsType.get): Promise<Character['magics']> => {
+  export const get = async (params: SkillsType.get): Promise<Magic> => {
     try {
-      const { id, char } = SkillsValidation.get.parse(params);
+      const { id } = SkillsValidation.get.parse(params);
 
-      const { characters } = await CharacterService.get({ id: char });
+      const skill = await prisma.magic.findFirst({
+        where: { id },
+      });
 
-      const skill = id
-        ? [characters[0]?.magics.find((magic) => magic?.id! === id)!]
-        : characters[0]?.magics!;
-
-      if (skill.length === 0) {
-        throw new Exception.AppError(StatusCode.BAD_REQUEST, ['SKILL NOT FOUND']);
+      if (!skill) {
+        throw new Exception.AppError(StatusCode.NOT_FOUND, [Messages.StatusMessage.NOT_FOUND]);
       }
 
       return skill;
@@ -31,32 +27,25 @@ export namespace SkillsService {
       throw new Exception.AppError(StatusCode.INTERNAL_SERVER_ERROR, [error]);
     }
   };
-  export const add = async (params: SkillsType.add): Promise<Character['magics']> => {
+  export const add = async (params: SkillsType.add): Promise<Magic> => {
     try {
       const { char, damage, name, castingtime, component, description, duration, range } =
         SkillsValidation.add.parse(params);
 
-      const skill = {
-        id: uuid(),
-        damage,
-        name,
-        castingtime,
-        component,
-        description,
-        duration,
-        range,
-      };
-
-      const charUpdated = await prisma.character.update({
-        where: {
-          id: char,
-        },
+      const skill = await prisma.magic.create({
         data: {
-          magics: { push: skill },
+          charId: char,
+          damage,
+          name,
+          castingtime,
+          component,
+          description,
+          duration,
+          range,
         },
       });
 
-      return charUpdated.magics;
+      return skill;
     } catch (error: any) {
       if (error instanceof Exception.AppError) {
         throw new Exception.AppError(error?.statusCode, error?.messages);

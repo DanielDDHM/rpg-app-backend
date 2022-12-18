@@ -3,7 +3,7 @@ import { GenericTypes, SkillsReqType, SkillsType } from '../types';
 import { StatusCode } from '../constants';
 import { PresenterFactory } from '../factories';
 import { SkillsService } from '../services';
-import { magic } from '@prisma/client';
+import { Magic } from '@prisma/client';
 
 export namespace SkillsController {
   export const get = async (
@@ -12,7 +12,7 @@ export namespace SkillsController {
   ) => {
     const skills = await SkillsService.get(req.query as SkillsType.get);
 
-    return res.status(StatusCode.OK).send(new PresenterFactory<magic>(skills, ['SUCCESS']));
+    return res.status(StatusCode.OK).send(new PresenterFactory<Magic>(skills, ['SUCCESS']));
   };
 
   export const add = async (
@@ -23,7 +23,7 @@ export namespace SkillsController {
       char: Number(req.params.id),
       ...req.body,
     } as SkillsType.add);
-    return res.status(StatusCode.OK).send(new PresenterFactory<magic>(skills, ['SUCCESS']));
+    return res.status(StatusCode.OK).send(new PresenterFactory<Magic>(skills, ['SUCCESS']));
   };
 
   export const edit = async (
@@ -34,7 +34,7 @@ export namespace SkillsController {
       char: Number(req.params.id),
       ...req.body,
     } as SkillsType.edit);
-    return res.status(StatusCode.OK).send(new PresenterFactory<magic>(skills, ['SUCCESS']));
+    return res.status(StatusCode.OK).send(new PresenterFactory<Magic>(skills, ['SUCCESS']));
   };
 
   export const remove = async (
@@ -45,6 +45,6 @@ export namespace SkillsController {
       char: Number(req.params.id),
       ...req.query,
     } as SkillsType.remove);
-    return res.status(StatusCode.OK).send(new PresenterFactory<magic>(skills, ['SUCCESS']));
+    return res.status(StatusCode.OK).send(new PresenterFactory<Magic>(skills, ['SUCCESS']));
   };
 }

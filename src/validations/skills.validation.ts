@@ -12,12 +12,12 @@ export namespace SkillsValidation {
     .object({
       char: z.number().nonnegative({ message: 'NON_NEGATIVE' }),
       name: z.string().min(2, { message: 'NON_EMPTY' }),
-      castingtime: z.string().min(2, { message: 'NON_EMPTY' }),
+      castingtime: z.number().nonnegative(),
       range: z.number().nonnegative(),
       component: z.object({}),
-      duration: z.string().min(2, { message: 'NON_EMPTY' }),
+      duration: z.number().nonnegative(),
       description: z.string().min(2, { message: 'NON_EMPTY' }),
-      damage: z.string().min(2, { message: 'NON_EMPTY' }),
+      damage: z.number().nonnegative(),
     })
     .strict();
 
@@ -26,12 +26,12 @@ export namespace SkillsValidation {
       id: z.number().nonnegative({ message: 'NON_NEGATIVE' }),
       char: z.number().nonnegative({ message: 'NON_NEGATIVE' }),
       name: z.string().min(2, { message: 'NON_EMPTY' }),
-      castingtime: z.string().min(2, { message: 'NON_EMPTY' }),
+      castingtime: z.number().nonnegative(),
       range: z.number().nonnegative(),
       component: z.object({}),
-      duration: z.string().min(2, { message: 'NON_EMPTY' }),
+      duration: z.number().nonnegative(),
       description: z.string().min(2, { message: 'NON_EMPTY' }),
-      damage: z.string().min(2, { message: 'NON_EMPTY' }),
+      damage: z.number().nonnegative(),
     })
     .strict();
 

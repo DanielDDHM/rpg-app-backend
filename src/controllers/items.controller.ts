@@ -1,4 +1,4 @@
-import { item } from '@prisma/client';
+import { Item } from '@prisma/client';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { StatusCode } from '../constants';
 import { PresenterFactory } from '../factories';
@@ -13,7 +13,7 @@ export namespace ItemsController {
     const { id } = req.query;
     const items = await ItemsService.get({ id: Number(id) } as ItemsType.get);
 
-    return res.status(StatusCode.OK).send(new PresenterFactory<item>(items, ['SUCCESS']));
+    return res.status(StatusCode.OK).send(new PresenterFactory<Item>(items, ['SUCCESS']));
   };
 
   export const add = async (
@@ -24,7 +24,7 @@ export namespace ItemsController {
       char: Number(req.params.id),
       ...req.body,
     } as ItemsType.add);
-    return res.status(StatusCode.OK).send(new PresenterFactory<item>(items, ['SUCCESS']));
+    return res.status(StatusCode.OK).send(new PresenterFactory<Item>(items, ['SUCCESS']));
   };
 
   export const edit = async (
@@ -35,7 +35,7 @@ export namespace ItemsController {
       char: Number(req.params.id),
       ...req.body,
     } as ItemsType.edit);
-    return res.status(StatusCode.OK).send(new PresenterFactory<item>(items, ['SUCCESS']));
+    return res.status(StatusCode.OK).send(new PresenterFactory<Item>(items, ['SUCCESS']));
   };
 
   export const remove = async (
@@ -46,6 +46,6 @@ export namespace ItemsController {
       char: Number(req.params.id),
       ...req.query,
     } as ItemsType.remove);
-    return res.status(StatusCode.OK).send(new PresenterFactory<item>(items, ['SUCCESS']));
+    return res.status(StatusCode.OK).send(new PresenterFactory<Item>(items, ['SUCCESS']));
   };
 }

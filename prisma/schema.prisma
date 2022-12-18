@@ -56,7 +56,7 @@ model Magic {
   damage      Int
   name        String
   castingtime Int
-  component   String
+  component   Json?
   description String
   duration    Int
   range       Int
