@@ -13,7 +13,7 @@ const userRouter = (
   done: Function,
 ) => {
   fastify
-    .get('/:id?', UserController.get)
+    .get('/', UserController.get)
     .post('/', UserController.create)
     .put('/:id', UserController.update)
     .patch('/:id', UserController.activate)

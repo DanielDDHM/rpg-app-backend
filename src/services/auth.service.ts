@@ -1,10 +1,10 @@
-import { prisma } from "../../config";
-import {  Messages, StatusCode } from "../../constants";
-import { Exception } from "../../helpers";
-import { GenericValidation } from "../../validations";
+import { prisma } from "../config";
+import {  Messages, StatusCode } from "../constants";
+import { Exception } from "../helpers";
+import { GenericValidation } from "../validations";
 import jwt from "jsonwebtoken";
-import { PasswordCrypt } from "../../helpers/auth";
-import { GenericTypes } from "../../types";
+import { PasswordCrypt } from "../helpers/auth";
+import { GenericTypes } from "../types";
 
 export namespace AuthService {
   export const login = async (payload: GenericTypes.login):

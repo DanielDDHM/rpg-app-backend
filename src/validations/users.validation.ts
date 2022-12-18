@@ -4,7 +4,7 @@ export namespace UsersValidation {
   export const get = z.object({
     id: z.number()
         .nonnegative({message: 'NON_NEGATIVE'})
-      .optional(),
+        .optional(),
     email: z.string()
       .min(2, { message: 'NON_EMPTY' })
       .optional(),

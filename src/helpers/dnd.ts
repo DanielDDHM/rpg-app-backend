@@ -1,6 +1,6 @@
-import { ExternalRequest } from "../../config"
-import {  StatusCode, Urls } from "../../constants"
-import { Exception } from "../exception"
+import { ExternalRequest } from "../config"
+import {  StatusCode, Urls } from "../constants"
+import { Exception } from "./exception"
 
 export namespace DnDRequest {
 
@@ -9,7 +9,7 @@ export namespace DnDRequest {
     try {
       const response = await ExternalRequest.get(`${Urls.Api.dnd}/${index}/${query}`)
       return response.data
-    } catch (error) {
+    } catch (error: any) {
       throw new Exception.AppError(
         StatusCode.INTERNAL_SERVER_ERROR,
         [error])
@@ -21,7 +21,7 @@ export namespace DnDRequest {
     try {
       const response = await ExternalRequest.get(`${Urls.Api.dnd}/classes/${index}/${query}`)
       return response.data
-    } catch (error) {
+    } catch (error: any) {
       throw new Exception.AppError(
         StatusCode.INTERNAL_SERVER_ERROR,
         [error])
@@ -33,7 +33,7 @@ export namespace DnDRequest {
     try {
       const response = await ExternalRequest.get(`${Urls.Api.dnd}/classes/${index}/levels/${query}/${resource}`)
       return response.data
-    } catch (error) {
+    } catch (error: any) {
       throw new Exception.AppError(
         StatusCode.INTERNAL_SERVER_ERROR,
         [error])

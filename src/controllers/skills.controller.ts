@@ -6,11 +6,11 @@ import {
   GenericTypes,
   SkillsReqType,
   SkillsType
-} from "../../types"
+} from "../types"
 import { Character } from "@prisma/client"
-import { StatusCode } from "../../constants"
-import { PresenterFactory } from "../../factories"
-import { SkillsService } from "../../services"
+import { StatusCode } from "../constants"
+import { PresenterFactory } from "../factories"
+import { SkillsService } from "../services"
 
 
 export namespace SkillsController {

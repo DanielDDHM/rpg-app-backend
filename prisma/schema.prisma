@@ -11,9 +11,9 @@ datasource db {
 model Campaign {
   id        Int         @id @unique @default(autoincrement())
   name      String
-  master    Users       @relation(fields: [usersId], references: [id])
   usersId   Int         @unique
   character Character[]
+  master    Users       @relation(fields: [usersId], references: [id])
   createdAt DateTime    @default(now())
   updatedAt DateTime?   @default(now())
 }
@@ -35,17 +35,39 @@ model Users {
 model Character {
   id          Int       @id @unique @default(autoincrement())
   name        String
-  owner       Users     @relation(fields: [usersId], references: [id])
-  usersId     Int       @unique
-  campaign    Campaign  @relation(fields: [campaignsId], references: [id])
-  campaignsId Int       @unique
   about       Json?
   slots       Json?
   atributes   Json?
   status      Json?
-  magics      Json[]    @default([])
-  items       Json[]    @default([])
+  magics      magic[]
+  items       item[]
+  usersId     Int       @unique
+  campaignsId Int       @unique
+  owner       Users     @relation(fields: [usersId], references: [id])
+  campaign    Campaign  @relation(fields: [campaignsId], references: [id])
   isAlive     Boolean?  @default(true)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime? @default(now())
+}
+
+model magic {
+  id Int @id @unique @default(autoincrement())
+
+  damage      Int
+  name        String
+  castingtime Int
+  component   String
+  description String
+  duration    Int
+  range       Int
+  charId      Int       @unique
+  char        Character @relation(fields: [charId], references: [id])
+}
+
+model item {
+  id Int @id @unique @default(autoincrement())
+  charId    Int       @unique
+  char      Character @relation(fields: [charId], references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @default(now())
 }

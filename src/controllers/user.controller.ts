@@ -1,7 +1,8 @@
-import { StatusCode } from "../../constants";
-import { PresenterFactory } from "../../factories";
+import { StatusCode } from "../constants";
+import { PresenterFactory } from "../factories";
 import { Users } from "@prisma/client";
-import { UserService } from "../../services";
+import _, { omit } from "lodash";
+import { UserService } from "../services";
 import {
   FastifyReply,
   FastifyRequest
@@ -10,14 +11,14 @@ import {
   GenericTypes,
   UserReqType,
   UserTypes
-} from "../../types";
+} from "../types";
 
 export namespace UserController {
   export const get = async (
     req: FastifyRequest<{ Querystring: UserTypes.get }>,
     res: FastifyReply) => {
 
-    const user = await UserService.get({id: Number(req.query.id), ...req.query} as UserTypes.get)
+    const user = await UserService.get(req.query)
 
     return res.status(StatusCode.OK).send(
       new PresenterFactory<{ user: Users[], total: number }>(

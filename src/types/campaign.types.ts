@@ -2,7 +2,7 @@ import { z } from "zod"
 import {
   CampaignValidation,
   GenericValidation
-} from "../../validations"
+} from "../validations"
 
 export namespace CampaignTypes {
   export type get = z.infer<typeof CampaignValidation.get>
