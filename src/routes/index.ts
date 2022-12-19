@@ -1,4 +1,5 @@
 import { FastifyInstance, FastifyRegisterOptions } from 'fastify';
+import dndRouter from '../integrations/dnd/dnd.routes';
 import authRouter from './auth.routes';
 import { campaignRouter } from './campaign.routes';
 import caractersRouter from './caracters.routes';
@@ -15,7 +16,8 @@ export default (app: FastifyInstance) => {
         .register(campaignRouter, { prefix: '/campaign' })
         .register(userRouter, { prefix: '/user' })
         .register(itemRouter, { prefix: '/item' })
-        .register(skillRouter, { prefix: '/skill' });
+        .register(skillRouter, { prefix: '/skill' })
+        .register(dndRouter, { prefix: '/dnd' });
       done();
     },
     { prefix: '/v1' },
