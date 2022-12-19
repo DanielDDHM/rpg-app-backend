@@ -7,6 +7,7 @@ const dndRouter = (
   done: Function,
 ) => {
   fastify.get('/char', DnDController.getChar);
+  fastify.get('/classResources', DnDController.getClassResources);
   fastify.get('/levelResources', DnDController.getLevelResources);
   done();
 };

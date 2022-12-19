@@ -56,7 +56,7 @@ export namespace DnDRequest {
     try {
       return await requestDnd({
         method: 'GET',
-        url: `/classes/${endpoint}/${query}`,
+        url: `/classes/${query}${endpoint ? `/${endpoint}` : ''}`,
         headers: {
           'Content-Type': 'application/json',
         },
