@@ -7,8 +7,3 @@ export namespace ItemsType {
   export type edit = z.infer<typeof ItemsValidation.edit>;
   export type remove = z.infer<typeof ItemsValidation.remove>;
 }
-export namespace ItemsReqType {
-  export type add = Omit<ItemsType.add, 'char'>;
-  export type edit = Omit<ItemsType.edit, 'char'>;
-  export type remove = Omit<ItemsType.remove, 'char'>;
-}

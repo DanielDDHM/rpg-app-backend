@@ -29,12 +29,12 @@ export namespace SkillsService {
   };
   export const add = async (params: SkillsType.add): Promise<Magic> => {
     try {
-      const { char, damage, name, castingtime, component, description, duration, range } =
+      const { charId, damage, name, castingtime, component, description, duration, range } =
         SkillsValidation.add.parse(params);
 
       const skill = await prisma.magic.create({
         data: {
-          charId: char,
+          charId,
           damage,
           name,
           castingtime,
@@ -54,33 +54,29 @@ export namespace SkillsService {
       throw new Exception.AppError(StatusCode.INTERNAL_SERVER_ERROR, [error]);
     }
   };
-  export const edit = async (params: SkillsType.edit): Promise<Character['magics']> => {
+  export const edit = async (params: SkillsType.edit): Promise<Magic> => {
     try {
-      const { id, char, damage, name, castingtime, component, description, duration, range } =
+      const { damage, name, castingtime, component, description, duration, range, id } =
         SkillsValidation.edit.parse(params);
 
-      const skill = {
-        damage,
-        name,
-        castingtime,
-        component,
-        description,
-        duration,
-        range,
-      };
+      await get({ id });
 
-      const { characters } = await CharacterService.get({ id: char });
-
-      characters[0]!.magics[characters[0]!.magics.findIndex((skill) => skill?.id! === id)] = skill;
-
-      const charUpdated = await prisma.character.update({
+      const magic = await prisma.magic.update({
         where: {
-          id: char,
+          id,
         },
-        data: { magics: characters[0]?.magics },
+        data: {
+          damage,
+          name,
+          castingtime,
+          component,
+          description,
+          duration,
+          range,
+        },
       });
 
-      return charUpdated.magics;
+      return magic;
     } catch (error: any) {
       if (error instanceof Exception.AppError) {
         throw new Exception.AppError(error?.statusCode, error?.messages);
@@ -89,25 +85,10 @@ export namespace SkillsService {
       throw new Exception.AppError(StatusCode.INTERNAL_SERVER_ERROR, [error]);
     }
   };
-  export const remove = async (params: SkillsType.remove) => {
+  export const remove = async (params: SkillsType.remove): Promise<{ message: string }> => {
     try {
-      const { id, char } = SkillsValidation.remove.parse(params);
-
-      const { characters } = await CharacterService.get({ id: char });
-
-      characters[0]!.magics.splice(
-        characters[0]!.magics.findIndex((skills) => skills?.id! === id),
-        1,
-      );
-
-      const charUpdated = await prisma.character.update({
-        where: {
-          id: char,
-        },
-        data: { magics: characters[0]?.magics },
-      });
-
-      return charUpdated.magics;
+      const { id } = params;
+      return { message: `Skill ${id} has Deleted` };
     } catch (error: any) {
       if (error instanceof Exception.AppError) {
         throw new Exception.AppError(error?.statusCode, error?.messages);

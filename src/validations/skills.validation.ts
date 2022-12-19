@@ -10,7 +10,7 @@ export namespace SkillsValidation {
 
   export const add = z
     .object({
-      char: z.number().nonnegative({ message: 'NON_NEGATIVE' }),
+      charId: z.number().nonnegative({ message: 'NON_NEGATIVE' }),
       name: z.string().min(2, { message: 'NON_EMPTY' }),
       castingtime: z.number().nonnegative(),
       range: z.number().nonnegative(),
@@ -24,7 +24,6 @@ export namespace SkillsValidation {
   export const edit = z
     .object({
       id: z.number().nonnegative({ message: 'NON_NEGATIVE' }),
-      char: z.number().nonnegative({ message: 'NON_NEGATIVE' }),
       name: z.string().min(2, { message: 'NON_EMPTY' }),
       castingtime: z.number().nonnegative(),
       range: z.number().nonnegative(),
@@ -38,7 +37,6 @@ export namespace SkillsValidation {
   export const remove = z
     .object({
       id: z.number().nonnegative({ message: 'NON_NEGATIVE' }),
-      char: z.number().nonnegative({ message: 'NON_NEGATIVE' }),
     })
     .strict();
 }

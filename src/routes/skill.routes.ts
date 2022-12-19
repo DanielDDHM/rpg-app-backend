@@ -7,7 +7,7 @@ const skillRouter = (
   done: Function,
 ) => {
   fastify
-    .get('/:id', SkillsController.get)
+    .get('/', SkillsController.get)
     .post('/', SkillsController.add)
     .put('/edit', SkillsController.edit)
     .delete('/:id', SkillsController.remove);

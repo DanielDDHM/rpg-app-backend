@@ -1,28 +1,30 @@
+import { Item } from '@prisma/client';
+import dayjs from 'dayjs';
+import { prisma } from '../config';
 import { StatusCode } from '../constants';
 import { Exception } from '../helpers';
 import { ItemsType } from '../types';
 import { ItemsValidation } from '../validations';
-import { prisma } from '../config';
-import { Character } from '@prisma/client';
-import { v4 as uuid } from 'uuid';
 import { CharacterService } from './caracter.service';
 
 export namespace ItemsService {
-  export const get = async (params: ItemsType.get): Promise<Character['items']> => {
+  export const get = async (params: ItemsType.get): Promise<Item> => {
     try {
       const { id, char } = ItemsValidation.get.parse(params);
+      console.log(char, id);
 
-      const { characters } = await CharacterService.get({ id: char });
+      const item = await prisma.item.findFirst({
+        where: {
+          id,
+          deletedAt: null,
+        },
+      });
 
-      const items = id
-        ? [characters[0]?.items.find((item) => item?.id! === id)!]
-        : characters[0]?.items!;
-
-      if (items.length === 0) {
+      if (!item) {
         throw new Exception.AppError(StatusCode.BAD_REQUEST, ['ITEM NOT FOUND']);
       }
 
-      return items;
+      return item;
     } catch (error: any) {
       console.log(error);
 
@@ -33,31 +35,48 @@ export namespace ItemsService {
       throw new Exception.AppError(StatusCode.INTERNAL_SERVER_ERROR, [error]);
     }
   };
-  export const add = async (params: ItemsType.add): Promise<Character['items']> => {
+  export const add = async (params: ItemsType.add): Promise<Item> => {
     try {
-      const { char, damage, name, properties, value, weight } = ItemsValidation.add.parse(params);
+      const { charId, damage, name, properties, value, weight } = ItemsValidation.add.parse(params);
 
-      await CharacterService.get({ id: char });
+      await CharacterService.get({ id: Number(charId) });
 
-      const item = {
-        id: uuid(),
-        damage,
-        name,
-        properties,
-        value,
-        weight,
-      };
+      return await prisma.item.create({
+        data: {
+          charId,
+          damage,
+          name,
+          properties,
+          value,
+          weight,
+        },
+      });
+    } catch (error: any) {
+      if (error instanceof Exception.AppError) {
+        throw new Exception.AppError(error?.statusCode, error?.messages);
+      }
 
-      const charUpdated = await prisma.character.update({
+      throw new Exception.AppError(StatusCode.INTERNAL_SERVER_ERROR, [error]);
+    }
+  };
+  export const edit = async (params: ItemsType.edit): Promise<Item> => {
+    try {
+      const { id, damage, name, properties, value, weight } = ItemsValidation.edit.parse(params);
+
+      await get({ id });
+
+      return await prisma.item.update({
         where: {
-          id: char,
+          id,
         },
         data: {
-          items: { push: item },
+          damage,
+          name,
+          properties,
+          value,
+          weight,
         },
       });
-
-      return charUpdated.items;
     } catch (error: any) {
       if (error instanceof Exception.AppError) {
         throw new Exception.AppError(error?.statusCode, error?.messages);
@@ -66,58 +85,24 @@ export namespace ItemsService {
       throw new Exception.AppError(StatusCode.INTERNAL_SERVER_ERROR, [error]);
     }
   };
-  export const edit = async (params: ItemsType.edit): Promise<Character['items']> => {
+  export const remove = async (params: ItemsType.remove): Promise<{ message: string }> => {
     try {
-      const { id, char, damage, name, properties, value, weight } =
-        ItemsValidation.edit.parse(params);
-      const item = {
-        id,
-        damage,
-        name,
-        properties,
-        value,
-        weight,
-      };
+      const { id } = ItemsValidation.remove.parse(params);
 
-      const { characters } = await CharacterService.get({ id: char });
+      await prisma.item
+        .update({
+          where: {
+            id,
+          },
+          data: {
+            deletedAt: dayjs().toISOString(),
+          },
+        })
+        .catch((e) => {
+          throw new Exception.AppError(e?.statusCode, [String(e)]);
+        });
 
-      characters[0].items[characters[0].items.findIndex((item) => item?.id! === id)] = item;
-
-      const charUpdated = await prisma.character.update({
-        where: {
-          id: char,
-        },
-        data: { items: characters[0]?.items },
-      });
-
-      return charUpdated.items;
-    } catch (error: any) {
-      if (error instanceof Exception.AppError) {
-        throw new Exception.AppError(error?.statusCode, error?.messages);
-      }
-
-      throw new Exception.AppError(StatusCode.INTERNAL_SERVER_ERROR, [error]);
-    }
-  };
-  export const remove = async (params: ItemsType.remove): Promise<Character['items']> => {
-    try {
-      const { id, char } = ItemsValidation.remove.parse(params);
-
-      const { characters } = await CharacterService.get({ id: char });
-
-      characters[0].items.splice(
-        characters[0].items.findIndex((item) => item?.id! === id),
-        1,
-      );
-
-      const charUpdated = await prisma.character.update({
-        where: {
-          id: char,
-        },
-        data: { items: characters[0].items },
-      });
-
-      return charUpdated.items;
+      return { message: 'deleted with success' };
     } catch (error: any) {
       if (error instanceof Exception.AppError) {
         throw new Exception.AppError(error?.statusCode, error?.messages);

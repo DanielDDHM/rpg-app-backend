@@ -1,11 +1,12 @@
 import { Users } from '@prisma/client';
+import dayjs from 'dayjs';
+import _ from 'lodash';
+import { prisma } from '../config';
+import { StatusCode } from '../constants';
+import { Exception } from '../helpers';
+import { PasswordCrypt } from '../helpers/auth';
 import { UserTypes } from '../types';
 import { UsersValidation } from '../validations';
-import { prisma } from '../config';
-import { Exception } from '../helpers';
-import { StatusCode } from '../constants';
-import { PasswordCrypt } from '../helpers/auth';
-import _ from 'lodash';
 
 export namespace UserService {
   export const get = async (params: UserTypes.get): Promise<{ user: Users[]; total: number }> => {
@@ -13,13 +14,9 @@ export namespace UserService {
       _.some(params, 'id') === true ? (params.id = Number(params.id)) : null;
       const { id, email, page, perPage } = UsersValidation.get.parse(params);
 
-      const query = {
-        OR: [{ id }, { email }],
-      };
-
       const [user, total] = await prisma.$transaction([
         prisma.users.findMany({
-          where: id || email ? query : {},
+          where: { AND: [{ deletedAt: null }, { OR: [{ id }, { email }] }] },
           skip: (Number(page) - 1) * Number(perPage) || 0,
           take: Number(perPage) || 10,
           include: {
@@ -27,7 +24,7 @@ export namespace UserService {
             character: true,
           },
         }),
-        prisma.users.count({ where: id || email ? query : {} }),
+        prisma.users.count({ where: { AND: [{ deletedAt: null }, { OR: [{ id }, { email }] }] } }),
       ]);
 
       if (!user || total === 0) {
@@ -141,14 +138,21 @@ export namespace UserService {
 
       const { user } = await UserService.get({ id });
 
+      console.log(user, user[0].password, password);
+
       const passMatch = await PasswordCrypt.compare({ pass: password!, userP: user[0].password });
+
+      console.log(passMatch);
 
       if (user[0].email !== email || !passMatch) {
         throw new Exception.AppError(StatusCode.BAD_REQUEST, ['DATA IS INCORRECT']);
       }
 
-      await prisma.users.delete({
+      await prisma.users.update({
         where: { id },
+        data: {
+          deletedAt: dayjs().toISOString(),
+        },
       });
 
       return { message: `User ${id} has Deleted` };

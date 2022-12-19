@@ -1,16 +1,17 @@
+import { Magic } from '@prisma/client';
 import { FastifyReply, FastifyRequest } from 'fastify';
-import { GenericTypes, SkillsReqType, SkillsType } from '../types';
 import { StatusCode } from '../constants';
 import { PresenterFactory } from '../factories';
 import { SkillsService } from '../services';
-import { Magic } from '@prisma/client';
+import { GenericTypes, SkillsReqType, SkillsType } from '../types';
 
 export namespace SkillsController {
   export const get = async (
     req: FastifyRequest<{ Querystring: SkillsType.get }>,
     res: FastifyReply,
   ) => {
-    const skills = await SkillsService.get(req.query as SkillsType.get);
+    const { id } = req.query;
+    const skills = await SkillsService.get({ id: Number(id) });
 
     return res.status(StatusCode.OK).send(new PresenterFactory<Magic>(skills, ['SUCCESS']));
   };
@@ -38,13 +39,14 @@ export namespace SkillsController {
   };
 
   export const remove = async (
-    req: FastifyRequest<{ Params: GenericTypes.id; Querystring: SkillsReqType.remove }>,
+    req: FastifyRequest<{ Params: GenericTypes.id }>,
     res: FastifyReply,
   ) => {
     const skills = await SkillsService.remove({
-      char: Number(req.params.id),
-      ...req.query,
+      id: Number(req.params.id),
     } as SkillsType.remove);
-    return res.status(StatusCode.OK).send(new PresenterFactory<Magic>(skills, ['SUCCESS']));
+    return res
+      .status(StatusCode.OK)
+      .send(new PresenterFactory<{ message: string }>(skills, ['SUCCESS']));
   };
 }

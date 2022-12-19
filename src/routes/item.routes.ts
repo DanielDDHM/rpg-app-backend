@@ -9,7 +9,7 @@ const itemRouter = (
   fastify;
 
   fastify
-    .get('/:id', ItemsController.get)
+    .get('/', ItemsController.get)
     .post('/', ItemsController.add)
     .put('/edit', ItemsController.edit)
     .delete('/:id', ItemsController.remove);

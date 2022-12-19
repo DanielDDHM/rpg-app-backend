@@ -38,6 +38,7 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "1.20.0",
     "cross-env": "7.0.3",
+    "dayjs": "^1.11.7",
     "docker": "1.0.0",
     "dotenv": "16.0.1",
     "fastify": "4.2.1",

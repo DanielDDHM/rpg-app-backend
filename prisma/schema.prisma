@@ -11,11 +11,12 @@ datasource db {
 model Campaign {
   id        Int         @id @unique @default(autoincrement())
   name      String
-  ownerId   Int         @unique
+  ownerId   Int
   character Character[]
   owner     Users       @relation(fields: [ownerId], references: [id])
   createdAt DateTime    @default(now())
   updatedAt DateTime?   @default(now())
+  deletedAt DateTime?
 }
 
 model Users {
@@ -30,6 +31,7 @@ model Users {
   isActive  Boolean?    @default(true)
   createdAt DateTime    @default(now())
   updatedAt DateTime?   @default(now())
+  deletedAt DateTime?
 }
 
 model Character {
@@ -42,13 +44,14 @@ model Character {
   isNpc       Boolean?  @default(false)
   magics      Magic[]
   items       Item[]
-  usersId     Int       @unique
-  campaignsId Int       @unique
+  usersId     Int
+  campaignsId Int
   owner       Users     @relation(fields: [usersId], references: [id])
   campaign    Campaign  @relation(fields: [campaignsId], references: [id])
   isAlive     Boolean?  @default(true)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime? @default(now())
+  deletedAt   DateTime?
 }
 
 model Magic {
@@ -60,8 +63,9 @@ model Magic {
   description String
   duration    Int
   range       Int
-  charId      Int       @unique
+  charId      Int
   char        Character @relation(fields: [charId], references: [id])
+  deletedAt   DateTime?
 }
 
 model Item {
@@ -71,8 +75,9 @@ model Item {
   properties Json?
   value      Int
   weight     Int
-  charId     Int       @unique
+  charId     Int
   char       Character @relation(fields: [charId], references: [id])
   createdAt  DateTime  @default(now())
   updatedAt  DateTime? @default(now())
+  deletedAt  DateTime?
 }

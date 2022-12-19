@@ -1,8 +1,8 @@
+import { Users } from '@prisma/client';
+import { FastifyReply, FastifyRequest } from 'fastify';
 import { StatusCode } from '../constants';
 import { PresenterFactory } from '../factories';
-import { Users } from '@prisma/client';
 import { UserService } from '../services';
-import { FastifyReply, FastifyRequest } from 'fastify';
 import { GenericTypes, UserTypes } from '../types';
 
 export namespace UserController {
@@ -10,7 +10,9 @@ export namespace UserController {
     req: FastifyRequest<{ Querystring: UserTypes.get }>,
     res: FastifyReply,
   ) => {
-    const user = await UserService.get(req.query);
+    let { id } = req.query;
+    id ? (id = Number(id)) : id;
+    const user = await UserService.get({ ...req.query, id });
 
     return res
       .status(StatusCode.OK)
@@ -48,13 +50,16 @@ export namespace UserController {
     return res.status(StatusCode.OK).send(new PresenterFactory<Users>(userActivated, ['SUCCESS']));
   };
   export const destroy = async (
-    req: FastifyRequest<{ Params: GenericTypes.id }>,
+    req: FastifyRequest<{ Params: GenericTypes.id; Body: Omit<UserTypes.destroy, 'id'> }>,
     res: FastifyReply,
   ) => {
     const {
       params: { id },
     } = req;
-    const userDeleted = await UserService.destroy({ id: Number(id) } as UserTypes.destroy);
+    const userDeleted = await UserService.destroy({
+      id: Number(id),
+      ...req.body,
+    } as UserTypes.destroy);
 
     return res.status(StatusCode.OK).send(new PresenterFactory<{ message: string }>(userDeleted));
   };

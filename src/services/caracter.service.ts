@@ -1,7 +1,8 @@
 import { Character } from '@prisma/client';
-import { Exception } from '../helpers';
+import dayjs from 'dayjs';
 import { prisma } from '../config';
 import { StatusCode } from '../constants';
+import { Exception } from '../helpers';
 import { CharacterType, GenericTypes } from '../types';
 import { CharacterValidation, GenericValidation } from '../validations';
 import { CampaignService } from './campaign.service';
@@ -14,13 +15,14 @@ export namespace CharacterService {
     try {
       const { id, user, campaign, page, perPage } = CharacterValidation.get.parse(params);
 
-      const query = {
-        OR: [{ id }, { userId: user }, { campaignsId: campaign }],
-      };
-
       const [characters, total] = await prisma.$transaction([
         prisma.character.findMany({
-          where: id || user ? query : {},
+          where: {
+            AND: [
+              { OR: [{ id }, { usersId: user }, { campaignsId: campaign }] },
+              { deletedAt: null },
+            ],
+          },
           skip: (Number(page) - 1) * Number(perPage) || 0,
           take: Number(perPage) || 10,
           include: {
@@ -30,7 +32,14 @@ export namespace CharacterService {
             campaign: true,
           },
         }),
-        prisma.character.count({ where: id || user ? query : {} }),
+        prisma.character.count({
+          where: {
+            AND: [
+              { OR: [{ id }, { usersId: user }, { campaignsId: campaign }] },
+              { deletedAt: null },
+            ],
+          },
+        }),
       ]);
 
       if (!characters.length) {
@@ -149,8 +158,11 @@ export namespace CharacterService {
 
       await get({ id });
 
-      const char = await prisma.character.delete({
+      const char = await prisma.character.update({
         where: { id },
+        data: {
+          deletedAt: dayjs().toISOString(),
+        },
       });
 
       return { message: `user ${char.id} has been deleted` };

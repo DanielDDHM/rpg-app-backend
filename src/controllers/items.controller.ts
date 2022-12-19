@@ -3,7 +3,7 @@ import { FastifyReply, FastifyRequest } from 'fastify';
 import { StatusCode } from '../constants';
 import { PresenterFactory } from '../factories';
 import { ItemsService } from '../services';
-import { GenericTypes, ItemsReqType, ItemsType } from '../types';
+import { GenericTypes, ItemsType } from '../types';
 
 export namespace ItemsController {
   export const get = async (
@@ -16,36 +16,34 @@ export namespace ItemsController {
     return res.status(StatusCode.OK).send(new PresenterFactory<Item>(items, ['SUCCESS']));
   };
 
-  export const add = async (
-    req: FastifyRequest<{ Params: GenericTypes.id; Body: ItemsReqType.add }>,
-    res: FastifyReply,
-  ) => {
+  export const add = async (req: FastifyRequest<{ Body: ItemsType.add }>, res: FastifyReply) => {
     const items = await ItemsService.add({
-      char: Number(req.params.id),
       ...req.body,
     } as ItemsType.add);
     return res.status(StatusCode.OK).send(new PresenterFactory<Item>(items, ['SUCCESS']));
   };
 
   export const edit = async (
-    req: FastifyRequest<{ Params: GenericTypes.id; Body: ItemsReqType.edit }>,
+    req: FastifyRequest<{ Querystring: GenericTypes.id; Body: Omit<ItemsType.edit, 'id'> }>,
     res: FastifyReply,
   ) => {
     const items = await ItemsService.edit({
-      char: Number(req.params.id),
+      id: Number(req.query.id),
       ...req.body,
     } as ItemsType.edit);
     return res.status(StatusCode.OK).send(new PresenterFactory<Item>(items, ['SUCCESS']));
   };
 
   export const remove = async (
-    req: FastifyRequest<{ Params: GenericTypes.id; Querystring: ItemsReqType.remove }>,
+    req: FastifyRequest<{ Params: GenericTypes.id }>,
     res: FastifyReply,
   ) => {
     const items = await ItemsService.remove({
-      char: Number(req.params.id),
-      ...req.query,
+      id: Number(req.params.id),
     } as ItemsType.remove);
-    return res.status(StatusCode.OK).send(new PresenterFactory<Item>(items, ['SUCCESS']));
+
+    return res
+      .status(StatusCode.OK)
+      .send(new PresenterFactory<{ message: string }>(items, ['SUCCESS']));
   };
 }

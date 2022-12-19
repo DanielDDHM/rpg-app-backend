@@ -10,31 +10,29 @@ export namespace ItemsValidation {
 
   export const add = z
     .object({
-      id: z.number().nonnegative({ message: 'NON_NEGATIVE' }),
+      charId: z.number().nonnegative({ message: 'NON_NEGATIVE' }),
       name: z.string().min(2, { message: 'NON_EMPTY' }),
-      properties: z.object({}),
-      value: z.string().min(2, { message: 'NON_EMPTY' }),
-      damage: z.string().min(2, { message: 'NON_EMPTY' }),
-      weight: z.string().min(2, { message: 'NON_EMPTY' }),
+      properties: z.object({}).optional(),
+      value: z.number().nonnegative({ message: 'NON_NEGATIVE' }),
+      damage: z.number().nonnegative({ message: 'NON_NEGATIVE' }),
+      weight: z.number().nonnegative({ message: 'NON_NEGATIVE' }),
     })
     .strict();
 
   export const edit = z
     .object({
       id: z.number().nonnegative({ message: 'NON_NEGATIVE' }),
-      char: z.number().nonnegative({ message: 'NON_NEGATIVE' }),
       name: z.string().min(2, { message: 'NON_EMPTY' }),
       properties: z.object({}),
-      value: z.string().min(2, { message: 'NON_EMPTY' }),
-      damage: z.string().min(2, { message: 'NON_EMPTY' }),
-      weight: z.string().min(2, { message: 'NON_EMPTY' }),
+      value: z.number().nonnegative({ message: 'NON_NEGATIVE' }),
+      damage: z.number().nonnegative({ message: 'NON_NEGATIVE' }),
+      weight: z.number().nonnegative({ message: 'NON_NEGATIVE' }),
     })
     .strict();
 
   export const remove = z
     .object({
       id: z.number().nonnegative({ message: 'NON_NEGATIVE' }),
-      char: z.number().nonnegative({ message: 'NON_NEGATIVE' }),
     })
     .strict();
 }

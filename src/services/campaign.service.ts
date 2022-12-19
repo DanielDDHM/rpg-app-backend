@@ -1,4 +1,5 @@
 import { Campaign } from '@prisma/client';
+import dayjs from 'dayjs';
 import { prisma } from '../config';
 import { StatusCode } from '../constants';
 import { Exception } from '../helpers';
@@ -14,13 +15,10 @@ export namespace CampaignService {
       params.id ? (params.id = Number(params.id)) : null;
       const { id, user, page, perPage } = CampaignValidation.get.parse(params);
 
-      const query = {
-        OR: [{ id }, { user }],
-      };
-
+      //TODO: Rever Wheres
       const [campaign, total] = await prisma.$transaction([
         prisma.campaign.findMany({
-          where: id || user ? query : {},
+          where: { AND: [{ OR: [{ id }, { user }] }, { deletedAt: null }] },
           skip: (Number(page) - 1) * Number(perPage) || 0,
           take: Number(perPage) || 10,
           include: {
@@ -28,7 +26,9 @@ export namespace CampaignService {
             character: true,
           },
         }),
-        prisma.campaign.count({ where: id || user ? query : {} }),
+        prisma.campaign.count({
+          where: { AND: [{ OR: [{ id }, { user }] }, { deletedAt: null }] },
+        }),
       ]);
 
       if (!campaign || total === 0) {
@@ -97,9 +97,10 @@ export namespace CampaignService {
 
       await CampaignService.get({ id });
 
-      const campaign = await prisma.campaign.delete({
-        where: {
-          id,
+      const campaign = await prisma.campaign.update({
+        where: { id },
+        data: {
+          deletedAt: dayjs().toISOString(),
         },
       });
 
