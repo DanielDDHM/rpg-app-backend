@@ -1,9 +1,9 @@
+import jwt from 'jsonwebtoken';
 import { prisma } from '../config';
 import { Messages, StatusCode } from '../constants';
 import { Exception, PasswordCrypt } from '../helpers';
-import { GenericValidation } from '../validations';
-import jwt from 'jsonwebtoken';
 import { GenericTypes } from '../types';
+import { GenericValidation } from '../validations';
 
 export namespace AuthService {
   export const login = async (
@@ -20,7 +20,10 @@ export namespace AuthService {
 
       if (!user) throw new Exception.AppError(StatusCode.NOT_FOUND, [Messages.User.NOT_FOUND]);
 
-      const passMatch = await PasswordCrypt.compare({ pass: password, userP: user.password });
+      const passMatch = await PasswordCrypt.compare({
+        pass: password,
+        userP: user.password,
+      });
 
       if (!passMatch || user.email != email) {
         throw new Exception.AppError(StatusCode.BAD_REQUEST, ['WRONG DATA']);
@@ -30,7 +33,9 @@ export namespace AuthService {
         data: { nick, message: 'CURIOSO' },
       };
 
-      const token = jwt.sign(data, String(process.env.AUTH_SECRET), { expiresIn: '1h' });
+      const token = jwt.sign(data, String(process.env.AUTH_SECRET), {
+        expiresIn: '1h',
+      });
 
       return { auth: true, token };
     } catch (error: any) {

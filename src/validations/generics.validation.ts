@@ -17,8 +17,8 @@ export namespace GenericValidation {
 
   export const login = z
     .object({
-      nick: z.string().min(3, { message: 'NOT_EMPTY' }),
-      email: z.string().min(2, { message: 'NON_EMPTY' }),
+      nick: z.string().min(3, { message: 'NOT_EMPTY' }).optional(),
+      email: z.string().min(2, { message: 'NON_EMPTY' }).optional(),
       password: z.string().min(2, { message: 'NON_EMPTY' }).max(10, { message: 'MAX_LENGTH_8' }),
     })
     .strict();
